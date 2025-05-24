@@ -1,5 +1,6 @@
 @use 'variables' as *;
 
+/* ====== Layout geral ====== */
 :host {
   display: flex;
   flex-direction: column;
@@ -22,13 +23,9 @@
   width: 100%;
 }
 
-.menu button.mat-button:hover,
-.menu button.mat-raised-button:hover {
-  background-color: rgba(17, 204, 171, 0.1);
-}
+/* ====== Componentes ====== */
 
-
-
+/* --- Header --- */
 mat-toolbar {
   position: sticky;
   top: 0;
@@ -43,20 +40,49 @@ mat-toolbar {
   align-items: center;
   width: 100%;
 
-
   .logo img {
     height: 40px;
   }
 }
 
-.menu button {
-  margin-left: 8px;
-}
-
+/* --- Footer --- */
 .footer {
-  flex-shrink: 0; // <- ESSENCIAL!
+  flex-shrink: 0;
   background: $color-surface;
   color: $color-text;
   padding: 1rem;
   text-align: center;
+}
+
+/* ====== Menu ====== */
+.menu {
+  button {
+    margin-left: 8px;
+
+    &:hover {
+      background-color: rgba(17, 204, 171, 0.1);
+    }
+  }
+}
+
+/* ====== Overrides Angular Material ====== */
+:host ::ng-deep mat-toolbar {
+
+  .mat-mdc-button,
+  .mat-mdc-raised-button {
+    background-color: $color-bg !important;
+    color: $color-text !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .mat-mdc-raised-button:hover {
+    background-color: darken(#11CCAB, 10%) !important;
+    color: $color-bg !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  }
+
+  .mat-mdc-raised-button:focus {
+    outline: 2px solid #0F1E21 !important;
+  }
 }

@@ -9,16 +9,15 @@ html, body {
 }
 
 :root {
-  --md-sys-color-primary: #6200ee;
-  --md-sys-color-on-primary: #ffffff;
-  --md-sys-color-secondary: #03dac6;
-  --md-sys-color-on-secondary: #000000;
+  --md-sys-color-primary: #11CCAB;
+  --md-sys-color-on-primary: #0F1E21;
+  --md-sys-color-secondary: #4D3FA6;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-surface: #19262B;
+  --md-sys-color-background: #0F1E21;
+  --md-sys-color-error: #B00020;
 
-  // ESSENCIAL:
-  --md-sys-color-primary-hover: red;   // ou um tom mais escuro da primária
-  --md-sys-color-primary-pressed: blue; // opcional, para clique
-
-  --md-sys-state-hover-opacity: 0.08;
-  --md-sys-state-focus-opacity: 0.12;
-
+  --md-sys-color-surface-container: #19262B;
+  --md-sys-color-outline: #4D3FA6;
 }
+
