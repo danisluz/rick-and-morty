@@ -1,13 +1,40 @@
+@use 'variables' as *;
+
 :host {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: $color-bg;
+  color: $color-text;
 }
+
+.content {
+  background-color: $color-bg;
+  color: $color-text;
+  flex: 1;
+  padding: 1rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 100%;
+}
+
+.menu button.mat-button:hover,
+.menu button.mat-raised-button:hover {
+  background-color: rgba(17, 204, 171, 0.1);
+}
+
+
 
 mat-toolbar {
   position: sticky;
   top: 0;
   z-index: 1000;
+  background-color: $color-surface;
+  min-height: 96px;
 }
 
 .header-content {
@@ -15,6 +42,7 @@ mat-toolbar {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+
 
   .logo img {
     height: 40px;
@@ -25,16 +53,10 @@ mat-toolbar {
   margin-left: 8px;
 }
 
-.content {
-  flex: 1; // <- ESSENCIAL!
-  padding: 1rem;
-  background: #fff; // Garantir contraste
-}
-
 .footer {
   flex-shrink: 0; // <- ESSENCIAL!
-  background: #20232a;
-  color: #fff;
+  background: $color-surface;
+  color: $color-text;
   padding: 1rem;
   text-align: center;
 }

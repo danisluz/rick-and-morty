@@ -1,18 +1,38 @@
 <mat-toolbar color="primary">
-  <div class="header-content">
-    <img src="/logo.svg" alt="Logo" class="logo" />
+  <div class="container header-content">
+    <img src="/logo.svg" alt="Logo" class="logo"/>
     <nav class="menu">
-      <button mat-button>Personagens</button>
-      <button mat-button>Sobre</button>
+      <button mat-raised-button>Personagens</button>
+      <button mat-raised-button>Sobre</button>
     </nav>
   </div>
 </mat-toolbar>
 
 <main class="content">
-  <router-outlet></router-outlet>
+  <div class="container">
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque libero tortor, sollicitudin eu tincidunt non,
+      sagittis sed leo. Duis eu libero et purus dapibus ultrices. Proin venenatis ligula in rutrum dapibus. Sed tincidunt
+      gravida justo, a ornare lorem finibus eget. Sed blandit erat ac mauris pretium facilisis nec sit amet ex. Fusce
+      facilisis, tortor non suscipit condimentum, nibh urna tristique nisl, laoreet tincidunt lacus augue eget ex. Proin
+      sollicitudin ex tortor, et efficitur felis congue et. Donec ut odio quis odio pellentesque laoreet.
+
+      Etiam egestas, nunc at lacinia rutrum, metus purus pellentesque justo, et lobortis dolor odio sed dui. Integer
+      gravida urna leo, a tincidunt justo blandit sed. Donec eu mi non justo egestas pulvinar. Nam condimentum nunc non
+      orci mollis, vitae molestie tellus consequat. Sed volutpat dolor sed sagittis commodo. Nulla mattis libero vitae
+      odio suscipit, ac tempor turpis egestas. Aliquam ullamcorper nisi et arcu dignissim maximus. Quisque rhoncus libero
+      in nibh pellentesque aliquet. Etiam eu pellentesque mauris. In nulla massa, sodales vitae porttitor ultrices,
+      gravida ut ante. Nullam vitae facilisis elit, ut posuere diam. Curabitur eget justo et neque iaculis volutpat
+      scelerisque id nulla. Vestibulum id dapibus erat, at pulvinar enim. Aenean at risus eu turpis placerat fermentum ut
+      id risus. Nunc in massa non felis tempor aliquet eget at dolor. Sed sagittis erat convallis ipsum ultricies dictum.
+    </p>
+    <router-outlet></router-outlet>
+  </div>
 </main>
 
 <footer class="footer">
-  <p>&copy; 2025 Rick and Morty</p>
+  <div class="container">
+    <p>&copy; 2025 Rick and Morty</p>
+  </div>
 </footer>
 

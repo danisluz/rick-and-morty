@@ -1,19 +1,24 @@
+@use "variables" as *;
+
 html, body {
-  height: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding: 0;
+  background-color: $color-bg;
+  color: $color-text;
+  font-family: 'Roboto', sans-serif;
 }
 
 :root {
-  /* Aqui você pode sobrescrever tokens se quiser */
   --md-sys-color-primary: #6200ee;
   --md-sys-color-on-primary: #ffffff;
   --md-sys-color-secondary: #03dac6;
   --md-sys-color-on-secondary: #000000;
-}
 
-/* Exemplo de customização */
-h1 {
-  font-size: 2rem;
-  color: var(--md-sys-color-primary);
+  // ESSENCIAL:
+  --md-sys-color-primary-hover: red;   // ou um tom mais escuro da primária
+  --md-sys-color-primary-pressed: blue; // opcional, para clique
+
+  --md-sys-state-hover-opacity: 0.08;
+  --md-sys-state-focus-opacity: 0.12;
+
 }
