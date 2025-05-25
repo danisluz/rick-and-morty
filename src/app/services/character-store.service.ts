@@ -7,9 +7,13 @@ import { Character } from '../models/character.model';
 })
 export class CharacterStoreService {
   private charactersSubject = new BehaviorSubject<Character[]>([]);
+  characters: Character[] = [];
+
   characters$ = this.charactersSubject.asObservable();
 
-  private characters: Character[] = [];
+  get currentCharacters(): Character[] {
+    return [...this.characters];
+  }
 
   constructor() {}
 
@@ -30,8 +34,9 @@ export class CharacterStoreService {
     this.charactersSubject.next([...this.characters]);
   }
 
-  addCharacter(character: Character) {
-    this.characters.push(character);
+  addCharacterAtTop(character: Character) {
+    this.characters = [character, ...this.characters];
     this.charactersSubject.next([...this.characters]);
   }
+
 }

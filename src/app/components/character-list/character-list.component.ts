@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {CommonModule, isPlatformBrowser} from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RickAndMortyService } from '../../services/rick-and-morty.service';
 import { Character } from '../../models/character.model';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
 import { PLATFORM_ID, Inject } from '@angular/core';
-import {CharacterCardComponent} from '../character-card/character-card.component';
-import {CharacterStoreService} from '../../services/character-store.service';
-
+import { CharacterCardComponent } from '../character-card/character-card.component';
+import { CharacterStoreService } from '../../services/character-store.service';
 
 @Component({
   selector: 'app-character-list',
@@ -25,7 +24,6 @@ export class CharacterListComponent implements OnInit {
   nameChanged$ = new Subject<string>();
   showBackToTop = false;
   isBrowser = false;
-
 
   filters = {
     name: '',
@@ -73,7 +71,8 @@ export class CharacterListComponent implements OnInit {
 
   applyFilters() {
     this.currentPage = 1;
-    this.characters = [];
+    // Resetando estado global:
+    this.characterStoreService.setCharacters([]);
     this.loadCharacters();
   }
 
@@ -85,12 +84,16 @@ export class CharacterListComponent implements OnInit {
     this.rickAndMortyService.getCharacters(filters).subscribe({
       next: (response) => {
         if (response) {
-          this.characterStoreService.setCharacters(response.results);
+          if (this.currentPage === 1) {
+            this.characterStoreService.setCharacters(response.results);
+          } else {
+            const current = this.characterStoreService.currentCharacters;
+            this.characterStoreService.setCharacters([...current, ...response.results]);
+          }
           this.info = response.info;
-
-          this.currentPage = 2;
+          this.currentPage++;
         } else {
-          this.characters = [];
+          this.characterStoreService.setCharacters([]);
           this.info = null;
         }
         this.loading = false;
@@ -109,7 +112,9 @@ export class CharacterListComponent implements OnInit {
 
     this.rickAndMortyService.getCharacters(filters).subscribe((res) => {
       if (res && res.results) {
-        this.characters = this.characters.concat(res.results);
+        const current = this.characterStoreService.characters;
+        this.characterStoreService.setCharacters([...current, ...res.results]);
+
         this.currentPage++;
       }
       this.isLoading = false;
@@ -128,5 +133,4 @@ export class CharacterListComponent implements OnInit {
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
 }
