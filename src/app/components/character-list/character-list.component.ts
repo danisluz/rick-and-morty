@@ -8,11 +8,12 @@ import { Character } from '../../models/character.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './character-list.component.html',
-  styleUrl: './character-list.component.scss'
+  styleUrls: ['./character-list.component.scss']
 })
 export class CharacterListComponent {
   characters: Character[] = [];
   info: any;
+  loading = true;
 
   constructor(private rickAndMortyService: RickAndMortyService) {}
 
@@ -21,13 +22,16 @@ export class CharacterListComponent {
   }
 
   getCharacters(page: number, name: string): void {
+    this.loading = true;
     this.rickAndMortyService.getCharacters(page, name).subscribe({
-      next: (data) => {
+      next: data => {
         this.characters = data.results;
         this.info = data.info;
+        this.loading = false;
       },
-      error: (err) => {
+      error: err => {
         console.error('Erro ao buscar personagens:', err);
+        this.loading = false;
       }
     });
   }

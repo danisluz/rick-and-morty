@@ -23,6 +23,12 @@
   width: 100%;
 }
 
+main {
+  flex: 1 0 auto;
+  min-height: 70vh;
+}
+
+
 /* ====== Header customizado ====== */
 .my-header {
   background-color: $color-surface;
@@ -71,5 +77,6 @@
   font-size: 0.8rem;
   font-weight: lighter;
 }
+
 
 
