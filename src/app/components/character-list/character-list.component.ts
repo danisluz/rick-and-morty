@@ -22,6 +22,7 @@ export class CharacterListComponent implements OnInit {
   loading = true;
   nameChanged$ = new Subject<string>();
   showBackToTop = false;
+  isBrowser = false;
 
 
   filters = {
@@ -36,10 +37,16 @@ export class CharacterListComponent implements OnInit {
   constructor(
     private rickAndMortyService: RickAndMortyService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    if (this.isBrowser) {
+      console.log('Browser width:', window.innerWidth);
+    }
+  }
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       window.addEventListener('scroll', this.onScroll.bind(this));
     }
 
@@ -49,8 +56,6 @@ export class CharacterListComponent implements OnInit {
       this.filters.name = name;
       this.applyFilters();
     });
-
-    window.addEventListener('scroll', this.onScroll.bind(this));
 
     this.loadCharacters();
   }
@@ -105,11 +110,16 @@ export class CharacterListComponent implements OnInit {
   }
 
   onScroll() {
+    if (!this.isBrowser) return;
+
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
     this.showBackToTop = scrollTop > 500;
   }
 
   scrollToTop() {
+    if (!this.isBrowser) return;
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
 }
