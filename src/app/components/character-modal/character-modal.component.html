@@ -1,0 +1,16 @@
+<div class="modal-backdrop" *ngIf="character as char">
+  <div class="modal-content">
+    <button (click)="close()">X</button>
+    <img [src]="char.image" alt="{{ char.name }}">
+    <h2>{{ char.name }}</h2>
+
+    <p><strong>Gender:</strong> {{ char.gender }}</p>
+    <p><strong>Status:</strong> {{ char.status }}</p>
+    <p><strong>Origin:</strong> {{ char.origin?.name }}</p>
+    <p><strong>Type:</strong> {{ char.type || 'Unknown' }}</p>
+    <p><strong>Location:</strong> {{ char.location?.name }}</p>
+
+    <button (click)="edit()">Editar</button>
+    <button (click)="delete()">Excluir</button>
+  </div>
+</div>

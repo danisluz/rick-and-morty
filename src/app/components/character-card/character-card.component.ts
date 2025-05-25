@@ -1,0 +1,18 @@
+import { Component, Input } from '@angular/core';
+import { Character } from '../../models/character.model';
+import { CharacterModalService } from '../../services/character-modal.service';
+
+@Component({
+  selector: 'app-character-card',
+  templateUrl: './character-card.component.html',
+  styleUrls: ['./character-card.component.scss']
+})
+export class CharacterCardComponent {
+  @Input() character!: Character;
+
+  constructor(private modalService: CharacterModalService) {}
+
+  openModal() {
+    this.modalService.open(this.character);
+  }
+}
