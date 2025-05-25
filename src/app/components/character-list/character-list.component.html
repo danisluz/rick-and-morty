@@ -52,21 +52,7 @@
 
       <!-- Lista de personagens -->
       <div class="col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let character of characters">
-        <div class="card h-100 shadow-sm">
-          <img [src]="character.image" [alt]="character.name" class="card-img-top">
-          <div class="card-body">
-            <h5 class="card-title">{{ character.name }}</h5>
-            <span class="badge"
-                  [ngClass]="{
-                    'bg-success': character.status === 'Alive',
-                    'bg-danger': character.status === 'Dead',
-                    'bg-secondary': character.status === 'unknown'
-                  }">
-              {{ character.status }}
-            </span>
-            <p class="card-text mt-2"><strong>Species:</strong> {{ character.species }}</p>
-          </div>
-        </div>
+        <app-character-card [character]="character"></app-character-card>
       </div>
 
       <!-- Botão Carregar Mais -->

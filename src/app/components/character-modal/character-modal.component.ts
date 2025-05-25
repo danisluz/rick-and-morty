@@ -39,4 +39,5 @@ export class CharacterModalComponent {
     this.storeService.deleteCharacter(this.character.id);
     this.close();
   }
+
 }

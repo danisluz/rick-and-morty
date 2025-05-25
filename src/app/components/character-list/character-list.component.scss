@@ -53,27 +53,6 @@
   }
 }
 
-// Card
-.card {
-  background-color: $color-surface;
-  color: $color-text;
-  border: none;
-  border-radius: 12px;
-
-  .card-body {
-    color: $color-text;
-  }
-
-  .card-title {
-    color: $color-text;
-    font-weight: 600;
-  }
-
-  .card-text {
-    color: rgba(255, 255, 255, 0.8);
-  }
-}
-
 // Button back to top
 .back-to-top {
   position: fixed;

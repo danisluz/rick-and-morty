@@ -5,12 +5,13 @@ import { Character } from '../../models/character.model';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
 import { PLATFORM_ID, Inject } from '@angular/core';
+import {CharacterCardComponent} from '../character-card/character-card.component';
 
 
 @Component({
   selector: 'app-character-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CharacterCardComponent],
   templateUrl: './character-list.component.html',
   styleUrls: ['./character-list.component.scss']
 })

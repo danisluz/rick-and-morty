@@ -1,0 +1,31 @@
+@use 'variables' as *;
+@use 'sass:color';
+
+// Card
+.card {
+  background-color: $color-surface;
+  color: $color-text;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    outline: none;
+  }
+
+  .card-body {
+    color: $color-text;
+  }
+
+  .card-title {
+    color: $color-text;
+    font-weight: 600;
+  }
+
+  .card-text {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
