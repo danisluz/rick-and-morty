@@ -25,11 +25,39 @@
 
 /* ====== Header customizado ====== */
 .my-header {
-  background-color: #123456;  // ✅ Sua cor personalizada
-  color: #fff;
+  background-color: $color-surface;
+  color: $color-text;
 
   .navbar-brand {
-    color: #fff;  // ✅ Se tiver texto
+    color: #fff;
+  }
+}
+
+/* ====== Menu ====== */
+
+/* Botões */
+.btn-custom {
+  background-color: $color-bg;
+  color: $color-text;
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #283C45;
+    color: $color-primary;
+  }
+
+  &.active {
+    background-color: #283C45;
+    color: $color-primary;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.5);
   }
 }
 
@@ -44,13 +72,4 @@
   font-weight: lighter;
 }
 
-/* ====== Menu ====== */
-.menu a {
-  margin-left: 8px;
-}
 
-.menu {
-  display: flex;  // ✅ Já está, mas confirma!
-  gap: 0.5rem;    // ✅ Espaçamento entre botões
-  align-items: center;  // ✅ Para alinhar verticalmente com o logo
-}
