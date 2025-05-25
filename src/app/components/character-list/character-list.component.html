@@ -1,6 +1,36 @@
 <div class="container py-4">
   <div *ngIf="characters?.length; else loading">
     <div class="row">
+
+      <div class="filters d-flex gap-2 flex-wrap mb-4">
+        <input type="text" class="form-control" placeholder="Busca por nome"
+               [ngModel]="filters.name"
+               (ngModelChange)="onNameChange($event)">
+
+        <select class="form-select" [(ngModel)]="filters.species">
+          <option value="">All Species</option>
+          <option *ngFor="let sp of speciesList" [value]="sp">{{ sp }}</option>
+        </select>
+
+        <select class="form-select" [(ngModel)]="filters.gender">
+          <option value="">All Genders</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="genderless">Genderless</option>
+          <option value="unknown">Unknown</option>
+        </select>
+
+        <select class="form-select" [(ngModel)]="filters.status">
+          <option value="">All Status</option>
+          <option value="alive">Alive</option>
+          <option value="dead">Dead</option>
+          <option value="unknown">Unknown</option>
+        </select>
+
+        <button class="btn btn-primary" (click)="applyFilters()">Search</button>
+      </div>
+
+
       <div class="col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let character of characters">
         <div class="card h-100 shadow-sm">
           <img [src]="character.image" [alt]="character.name" class="card-img-top">

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {catchError, Observable, of, throwError} from 'rxjs';
 import { CharactersResponse } from '../models/character.model';
 
 @Injectable({
@@ -12,8 +12,26 @@ export class RickAndMortyService {
 
   constructor(private http: HttpClient) {}
 
-  getCharacters(page: number = 1, name: string = ''): Observable<CharactersResponse> {
-    const url = `${this.baseUrl}/character/?page=${page}&name=${name}`;
-    return this.http.get<CharactersResponse>(url);
+  getCharacters(filters: any): Observable<CharactersResponse | null> {
+    let params = new HttpParams().set('page', filters.page || 1);
+
+    if (filters.name) params = params.set('name', filters.name);
+    if (filters.species) params = params.set('species', filters.species);
+    if (filters.gender) params = params.set('gender', filters.gender);
+    if (filters.status) params = params.set('status', filters.status);
+
+    return this.http.get<CharactersResponse>(`${this.baseUrl}/character/`, { params }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          console.warn('Nenhum personagem encontrado com os filtros:', filters);
+          return of(null);
+        } else {
+          console.error('Erro na API Rick and Morty:', error);
+          return throwError(() => error);
+        }
+      })
+    );
   }
+
+
 }
