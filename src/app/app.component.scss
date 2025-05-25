@@ -23,64 +23,34 @@
   width: 100%;
 }
 
-/* ====== Componentes ====== */
+/* ====== Header customizado ====== */
+.my-header {
+  background-color: #123456;  // ✅ Sua cor personalizada
+  color: #fff;
 
-/* --- Header --- */
-mat-toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background-color: $color-surface;
-  min-height: 96px;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-
-  .logo img {
-    height: 40px;
+  .navbar-brand {
+    color: #fff;  // ✅ Se tiver texto
   }
 }
 
-/* --- Footer --- */
+/* ====== Footer ====== */
 .footer {
   flex-shrink: 0;
   background: $color-surface;
   color: $color-text;
-  padding: 0;
+  padding: 1rem 0;
   text-align: center;
   font-size: 0.8rem;
   font-weight: lighter;
 }
 
 /* ====== Menu ====== */
-.menu {
-  button {
-    margin-left: 8px;
-  }
+.menu a {
+  margin-left: 8px;
 }
 
-/* ====== Overrides Angular Material ====== */
-:host ::ng-deep mat-toolbar {
-
-  .mat-mdc-button,
-  .mat-mdc-raised-button {
-    background-color: $color-bg !important;
-    color: $color-text !important;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .mat-mdc-raised-button:hover {
-    background-color: darken($color-primary, 10%) !important;
-    color: $color-bg !important;
-    transform: scale(1.05);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  }
-
-  .mat-mdc-raised-button:focus {
-    outline: 2px solid $color-surface !important;
-  }
+.menu {
+  display: flex;  // ✅ Já está, mas confirma!
+  gap: 0.5rem;    // ✅ Espaçamento entre botões
+  align-items: center;  // ✅ Para alinhar verticalmente com o logo
 }
