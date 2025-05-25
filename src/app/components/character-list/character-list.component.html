@@ -96,3 +96,14 @@
     </div>
   </ng-template>
 </div>
+
+
+<button
+  class="back-to-top"
+  (click)="scrollToTop()"
+  *ngIf="showBackToTop"
+  aria-label="Voltar ao topo"
+>
+  <i class="bi bi-chevron-up"></i>
+</button>
+

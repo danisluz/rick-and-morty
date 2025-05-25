@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import { RickAndMortyService } from '../../services/rick-and-morty.service';
 import { Character } from '../../models/character.model';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
+import { PLATFORM_ID, Inject } from '@angular/core';
+
 
 @Component({
   selector: 'app-character-list',
@@ -19,6 +21,8 @@ export class CharacterListComponent implements OnInit {
   info: any;
   loading = true;
   nameChanged$ = new Subject<string>();
+  showBackToTop = false;
+
 
   filters = {
     name: '',
@@ -29,15 +33,24 @@ export class CharacterListComponent implements OnInit {
 
   speciesList = ['Human', 'Alien', 'Robot', 'Animal', 'Mythological', 'Unknown'];
 
-  constructor(private rickAndMortyService: RickAndMortyService) {}
+  constructor(
+    private rickAndMortyService: RickAndMortyService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.addEventListener('scroll', this.onScroll.bind(this));
+    }
+
     this.nameChanged$.pipe(
       debounceTime(300)
     ).subscribe(name => {
       this.filters.name = name;
       this.applyFilters();
     });
+
+    window.addEventListener('scroll', this.onScroll.bind(this));
 
     this.loadCharacters();
   }
@@ -63,7 +76,6 @@ export class CharacterListComponent implements OnInit {
           this.characters = response.results;
           this.info = response.info;
 
-          // ✅ Importante: já preparar para próxima página
           this.currentPage = 2;
         } else {
           this.characters = [];
@@ -90,5 +102,14 @@ export class CharacterListComponent implements OnInit {
       }
       this.isLoading = false;
     });
+  }
+
+  onScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    this.showBackToTop = scrollTop > 500;
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
