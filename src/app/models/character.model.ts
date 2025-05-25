@@ -8,7 +8,7 @@ export interface Character {
   image: string;
   origin: LocationReference;
   location: LocationReference;
-  episode: string[]; // URLs dos episódios
+  episode: string[];
 }
 
 export interface LocationReference {
@@ -27,3 +27,4 @@ export interface CharactersResponse {
   info: PaginationInfo;
   results: Character[];
 }
+
