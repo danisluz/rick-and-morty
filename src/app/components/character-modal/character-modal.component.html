@@ -1,26 +1,51 @@
-<div class="modal fade show d-block" tabindex="-1" *ngIf="character as char" style="background-color: rgba(0,0,0,0.8);" (click)="close()">
-  <div class="modal-dialog" (click)="$event.stopPropagation()">
-    <div class="modal-content bg-dark text-light">
+<div class="custom-modal-backdrop" *ngIf="character as char" (click)="close()">
+  <div class="custom-modal-content" (click)="$event.stopPropagation()">
+    <button class="custom-close" (click)="close()">×</button>
 
-      <div class="modal-header border-0">
-        <h5 class="modal-title">{{ char.name }}</h5>
-        <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="close()"></button>
+    <img [src]="char.image" alt="{{ char.name }}" class="character-img">
+
+    <h2 class="character-name">{{ char.name }}</h2>
+
+    <div class="row text-start">
+      <div class="col-12 col-md-6">
+        <hr>
+        <strong>Gender</strong>
+        <p>{{ char.gender }}</p>
       </div>
-
-      <div class="modal-body text-center">
-        <img [src]="char.image" alt="{{ char.name }}" class="img-fluid mb-3 rounded">
-        <p><strong>Gender:</strong> {{ char.gender }}</p>
-        <p><strong>Status:</strong> {{ char.status }}</p>
-        <p><strong>Origin:</strong> {{ char.origin?.name }}</p>
-        <p><strong>Type:</strong> {{ char.type || 'Unknown' }}</p>
-        <p><strong>Location:</strong> {{ char.location?.name }}</p>
+      <div class="col-12 col-md-6">
+        <hr>
+        <strong>Type</strong>
+        <p>{{ char.type || 'Unknown' }}</p>
       </div>
-
-      <div class="modal-footer border-0">
-        <button type="button" class="btn btn-secondary" (click)="edit()">Editar</button>
-        <button type="button" class="btn btn-danger" (click)="delete()">Excluir</button>
+      <div class="col-12 col-md-6">
+        <hr>
+        <strong>Status</strong>
+        <p>{{ char.status }}</p>
       </div>
-
+      <div class="col-12 col-md-6">
+        <hr>
+        <strong>Location</strong>
+        <p>{{ char.location?.name }}</p>
+      </div>
+      <div class="col-12 col-md-6">
+        <hr>
+        <strong>Origin</strong>
+        <p>{{ char.origin?.name }}</p>
+      </div>
     </div>
+
+    <div class="modal-actions mt-3 d-flex justify-content-end gap-2 flex-column flex-md-row">
+      <button class="btn btn-custom d-inline-flex align-items-center gap-2" (click)="delete()">
+        <i class="bi bi-trash"></i>
+        Excluir
+      </button>
+
+      <button class="btn btn-custom d-inline-flex align-items-center gap-2" (click)="edit()">
+        <i class="bi bi-pencil"></i>
+        Editar
+      </button>
+    </div>
+
+
   </div>
 </div>
