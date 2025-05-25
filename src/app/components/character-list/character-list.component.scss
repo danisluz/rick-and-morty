@@ -1,0 +1,76 @@
+@use 'variables' as *;
+@use 'sass:color';
+
+// Filtros
+.filter-input {
+  background-color: $color-surface;
+  color: $color-text;
+  border: none;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  padding-left: 2rem;
+  flex: 1;
+  min-width: 120px;
+
+  &::placeholder {
+    color: $color-text;
+    opacity: 0.3;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px color.adjust($color-secondary, $lightness: -50%);
+    outline: none;
+  }
+}
+
+.select-wrapper {
+  flex: 1;
+  min-width: 120px;
+}
+
+.filter-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: $color-text;
+  pointer-events: none;
+  font-size: 1rem;
+}
+
+// Botão roxo
+.btn-purple {
+  background-color: $color-secondary;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  flex: 1;
+  transition: background-color 0.3s ease;
+  min-width: 120px;
+
+  &:hover {
+    background-color: color.adjust($color-secondary, $lightness: -10%);
+  }
+}
+
+// Card
+.card {
+  background-color: $color-surface;
+  color: $color-text;
+  border: none;
+  border-radius: 12px;
+
+  .card-body {
+    color: $color-text;
+  }
+
+  .card-title {
+    color: $color-text;
+    font-weight: 600;
+  }
+
+  .card-text {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}

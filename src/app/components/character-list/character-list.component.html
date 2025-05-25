@@ -2,34 +2,49 @@
   <div *ngIf="characters?.length; else loading">
     <div class="row">
 
-      <div class="filters d-flex gap-2 flex-wrap mb-4">
-        <input type="text" class="form-control" placeholder="Busca por nome"
-               [ngModel]="filters.name"
-               (ngModelChange)="onNameChange($event)">
+      <div class="filters d-flex align-items-center gap-2 mb-4 flex-wrap">
+        <div class="select-wrapper position-relative">
+          <i class="bi bi-person filter-icon"></i>
+          <input type="text" class="form-control filter-input ps-5" placeholder="Find by name..."
+                 [ngModel]="filters.name"
+                 (ngModelChange)="onNameChange($event)">
+        </div>
 
-        <select class="form-select" [(ngModel)]="filters.species">
-          <option value="">All Species</option>
-          <option *ngFor="let sp of speciesList" [value]="sp">{{ sp }}</option>
-        </select>
+        <div class="select-wrapper position-relative">
+          <i class="bi bi-funnel filter-icon"></i>
+          <select class="form-select filter-input ps-5" [(ngModel)]="filters.species">
+            <option value="">Species</option>
+            <option *ngFor="let sp of speciesList" [value]="sp">{{ sp }}</option>
+          </select>
+        </div>
 
-        <select class="form-select" [(ngModel)]="filters.gender">
-          <option value="">All Genders</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="genderless">Genderless</option>
-          <option value="unknown">Unknown</option>
-        </select>
+        <div class="select-wrapper position-relative">
+          <i class="bi bi-gender-ambiguous filter-icon"></i>
+          <select class="form-select filter-input ps-5" [(ngModel)]="filters.gender">
+            <option value="">Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="genderless">Genderless</option>
+            <option value="unknown">Unknown</option>
+          </select>
+        </div>
 
-        <select class="form-select" [(ngModel)]="filters.status">
-          <option value="">All Status</option>
-          <option value="alive">Alive</option>
-          <option value="dead">Dead</option>
-          <option value="unknown">Unknown</option>
-        </select>
 
-        <button class="btn btn-primary" (click)="applyFilters()">Search</button>
+        <div class="select-wrapper position-relative">
+          <i class="bi bi-heart-pulse filter-icon"></i>
+          <select class="form-select filter-input ps-5" [(ngModel)]="filters.status">
+            <option value="">Status</option>
+            <option value="alive">Alive</option>
+            <option value="dead">Dead</option>
+            <option value="unknown">Unknown</option>
+          </select>
+        </div>
+
+        <button class="btn btn-purple d-flex align-items-center gap-2" (click)="applyFilters()">
+          <i class="bi bi-search"></i>
+          Search
+        </button>
       </div>
-
 
       <div class="col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let character of characters">
         <div class="card h-100 shadow-sm">

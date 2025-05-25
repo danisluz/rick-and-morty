@@ -1,6 +1,6 @@
 @use 'variables' as *;
 
-/* ====== Layout geral ====== */
+// Layout geral
 :host {
   display: flex;
   flex-direction: column;
@@ -19,7 +19,6 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
   width: 100%;
 }
 
@@ -29,7 +28,7 @@ main {
 }
 
 
-/* ====== Header customizado ====== */
+// Header customizado
 .my-header {
   background-color: $color-surface;
   color: $color-text;
@@ -39,9 +38,8 @@ main {
   }
 }
 
-/* ====== Menu ====== */
-
-/* Botões */
+// Menu
+// Botões
 .btn-custom {
   background-color: $color-bg;
   color: $color-text;
@@ -67,7 +65,7 @@ main {
   }
 }
 
-/* ====== Footer ====== */
+// Footer
 .footer {
   flex-shrink: 0;
   background: $color-surface;
