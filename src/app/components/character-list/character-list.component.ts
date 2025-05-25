@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
 import { PLATFORM_ID, Inject } from '@angular/core';
 import {CharacterCardComponent} from '../character-card/character-card.component';
+import {CharacterStoreService} from '../../services/character-store.service';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class CharacterListComponent implements OnInit {
 
   constructor(
     private rickAndMortyService: RickAndMortyService,
+    private characterStoreService: CharacterStoreService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -47,6 +49,10 @@ export class CharacterListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.characterStoreService.characters$.subscribe(chars => {
+      this.characters = chars;
+    });
+
     if (this.isBrowser) {
       window.addEventListener('scroll', this.onScroll.bind(this));
     }
@@ -79,7 +85,7 @@ export class CharacterListComponent implements OnInit {
     this.rickAndMortyService.getCharacters(filters).subscribe({
       next: (response) => {
         if (response) {
-          this.characters = response.results;
+          this.characterStoreService.setCharacters(response.results);
           this.info = response.info;
 
           this.currentPage = 2;

@@ -34,10 +34,10 @@ export class CharacterModalComponent {
   }
 
   delete() {
-    if (!this.character) return;
-
-    this.storeService.deleteCharacter(this.character.id);
-    this.close();
+    if (this.character) {
+      this.storeService.deleteCharacter(this.character.id);
+      this.close();
+    }
   }
 
 }
