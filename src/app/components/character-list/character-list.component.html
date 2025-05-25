@@ -2,7 +2,9 @@
   <div *ngIf="characters?.length; else loading">
     <div class="row">
 
+      <!-- Filtros -->
       <div class="filters d-flex align-items-center gap-2 mb-4 flex-wrap">
+        <!-- Filtro por nome -->
         <div class="select-wrapper position-relative">
           <i class="bi bi-person filter-icon"></i>
           <input type="text" class="form-control filter-input ps-5" placeholder="Find by name..."
@@ -10,6 +12,7 @@
                  (ngModelChange)="onNameChange($event)">
         </div>
 
+        <!-- Filtro por espécie -->
         <div class="select-wrapper position-relative">
           <i class="bi bi-funnel filter-icon"></i>
           <select class="form-select filter-input ps-5" [(ngModel)]="filters.species">
@@ -18,6 +21,7 @@
           </select>
         </div>
 
+        <!-- Filtro por gênero -->
         <div class="select-wrapper position-relative">
           <i class="bi bi-gender-ambiguous filter-icon"></i>
           <select class="form-select filter-input ps-5" [(ngModel)]="filters.gender">
@@ -29,7 +33,7 @@
           </select>
         </div>
 
-
+        <!-- Filtro por status -->
         <div class="select-wrapper position-relative">
           <i class="bi bi-heart-pulse filter-icon"></i>
           <select class="form-select filter-input ps-5" [(ngModel)]="filters.status">
@@ -46,6 +50,7 @@
         </button>
       </div>
 
+      <!-- Lista de personagens -->
       <div class="col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let character of characters">
         <div class="card h-100 shadow-sm">
           <img [src]="character.image" [alt]="character.name" class="card-img-top">
@@ -63,13 +68,30 @@
           </div>
         </div>
       </div>
+
+      <!-- Botão Carregar Mais -->
+      <div class="d-flex justify-content-center my-4">
+        <button class="btn btn-purple w-auto" (click)="loadMore()" [disabled]="isLoading">
+          <ng-container *ngIf="!isLoading; else loadingMore">Load More</ng-container>
+        </button>
+      </div>
+
+      <!-- Spinner carregando mais -->
+      <ng-template #loadingMore>
+        <span>
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Loading...
+        </span>
+      </ng-template>
+
     </div>
   </div>
 
+  <!-- Spinner inicial -->
   <ng-template #loading>
     <div class="d-flex justify-content-center py-5">
       <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Carregando...</span>
+        <span class="visually-hidden">Loading...</span>
       </div>
     </div>
   </ng-template>

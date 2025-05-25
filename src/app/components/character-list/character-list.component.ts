@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RickAndMortyService } from '../../services/rick-and-morty.service';
-import {Character, CharactersResponse} from '../../models/character.model';
-import {FormsModule} from '@angular/forms';
-import {debounceTime, Subject} from 'rxjs';
+import { Character } from '../../models/character.model';
+import { FormsModule } from '@angular/forms';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-character-list',
@@ -14,6 +14,8 @@ import {debounceTime, Subject} from 'rxjs';
 })
 export class CharacterListComponent implements OnInit {
   characters: Character[] = [];
+  currentPage = 1;
+  isLoading = false;
   info: any;
   loading = true;
   nameChanged$ = new Subject<string>();
@@ -34,7 +36,7 @@ export class CharacterListComponent implements OnInit {
       debounceTime(300)
     ).subscribe(name => {
       this.filters.name = name;
-      this.loadCharacters();
+      this.applyFilters();
     });
 
     this.loadCharacters();
@@ -45,24 +47,24 @@ export class CharacterListComponent implements OnInit {
   }
 
   applyFilters() {
+    this.currentPage = 1;
+    this.characters = [];
     this.loadCharacters();
   }
 
   loadCharacters() {
     this.loading = true;
 
-    const params: any = {};
+    const filters = { ...this.filters, page: this.currentPage };
 
-    if (this.filters.name) params.name = this.filters.name;
-    if (this.filters.species) params.species = this.filters.species;
-    if (this.filters.gender) params.gender = this.filters.gender;
-    if (this.filters.status) params.status = this.filters.status;
-
-    this.rickAndMortyService.getCharacters(params).subscribe({
+    this.rickAndMortyService.getCharacters(filters).subscribe({
       next: (response) => {
         if (response) {
           this.characters = response.results;
           this.info = response.info;
+
+          // ✅ Importante: já preparar para próxima página
+          this.currentPage = 2;
         } else {
           this.characters = [];
           this.info = null;
@@ -70,9 +72,23 @@ export class CharacterListComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Erro ao buscar personagens:', err);
+        console.error('Error when searching for characters:', err);
         this.loading = false;
       }
+    });
+  }
+
+  loadMore() {
+    this.isLoading = true;
+
+    const filters = { ...this.filters, page: this.currentPage };
+
+    this.rickAndMortyService.getCharacters(filters).subscribe((res) => {
+      if (res && res.results) {
+        this.characters = this.characters.concat(res.results);
+        this.currentPage++;
+      }
+      this.isLoading = false;
     });
   }
 }

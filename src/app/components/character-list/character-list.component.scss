@@ -45,9 +45,8 @@
   border: none;
   border-radius: 12px;
   padding: 0.5rem 1rem;
-  flex: 1;
   transition: background-color 0.3s ease;
-  min-width: 120px;
+  padding: 8px 30px;
 
   &:hover {
     background-color: color.adjust($color-secondary, $lightness: -10%);
