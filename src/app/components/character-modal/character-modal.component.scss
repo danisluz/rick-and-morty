@@ -17,18 +17,23 @@
   border-radius: 15px;
   padding: 2rem;
   max-width: 500px;
-  width: 90vw; // <--- Use vw para garantir que nunca ultrapasse o viewport
-  box-sizing: border-box; // <--- Garante que padding não vaze
+  width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
   text-align: center;
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.2);
 
-  // Adicione uma mídia query para mobile
   @media (max-width: 600px) {
     padding: 1rem;
-    max-width: 98vw; // ocupa praticamente toda a tela
+    max-width: 98vw;
     width: 98vw;
     border-radius: 10px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 0.5rem;
   }
 }
 
@@ -73,8 +78,6 @@
   }
 
   p {
-    margin: 0;
-    margin-bottom: 0;
     font-size: 0.95rem;
   }
 }
