@@ -6,9 +6,9 @@ export interface Character {
   type: string;
   gender: string;
   image: string;
-  origin: LocationReference;
-  location: LocationReference;
-  episode: string[];
+  origin?: LocationReference;
+  location?: LocationReference;
+  episode?: string[];
 }
 
 export interface LocationReference {

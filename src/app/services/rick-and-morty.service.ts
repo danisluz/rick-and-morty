@@ -33,5 +33,12 @@ export class RickAndMortyService {
     );
   }
 
-
+  getCharacterById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/character/${id}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error(`Erro ao buscar personagem com id ${id}:`, error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

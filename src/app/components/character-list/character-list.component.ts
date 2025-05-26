@@ -58,8 +58,11 @@ export class CharacterListComponent implements OnInit {
       this.applyFilters();
     });
 
-    this.loadCharacters();
+    if (this.characterStoreService.currentCharacters.length === 0) {
+      this.loadCharacters();
+    }
   }
+
 
   onNameChange(name: string) {
     this.nameChanged$.next(name);

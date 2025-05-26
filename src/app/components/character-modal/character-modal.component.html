@@ -10,7 +10,7 @@
       <div class="col-12 col-md-6">
         <hr>
         <strong>Gender</strong>
-        <p>{{ char.gender }}</p>
+        <p>{{ char.gender || 'unknown gender' }}</p>
       </div>
       <div class="col-12 col-md-6">
         <hr>
@@ -20,17 +20,17 @@
       <div class="col-12 col-md-6">
         <hr>
         <strong>Status</strong>
-        <p>{{ char.status }}</p>
+        <p>{{ char.status || 'Status unknown' }}</p>
       </div>
       <div class="col-12 col-md-6">
         <hr>
         <strong>Location</strong>
-        <p>{{ char.location.name }}</p>
+        <p>{{ char.location?.name || 'Location unknown'}}</p>
       </div>
       <div class="col-12 col-md-6">
         <hr>
         <strong>Origin</strong>
-        <p>{{ char.origin.name }}</p>
+        <p>{{ char.origin?.name || 'Origin unknown' }}</p>
       </div>
     </div>
 
