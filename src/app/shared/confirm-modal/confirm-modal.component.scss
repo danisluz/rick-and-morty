@@ -1,0 +1,55 @@
+@use 'variables' as *;
+@use 'sass:color';
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5000 !important;
+  display: block;
+}
+
+.modal-content {
+  background-color: $color-bg;
+  color: $color-text;
+}
+
+.btn-custom {
+  background-color: $color-surface;
+  color: $color-text;
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+
+  &:hover {
+    background-color: #283C45;
+    color: $color-primary;
+  }
+
+  &.active {
+    background-color: #283C45;
+    color: $color-primary;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.5);
+  }
+}
+
+.btn-custom-delete {
+  @extend .btn-custom;
+  background-color: $color-secondary;
+  color: $color-text;
+
+  &:hover {
+    background-color: darken($color-secondary, 10%);
+    color: $color-text;
+  }
+}
+
+
