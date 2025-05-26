@@ -46,6 +46,8 @@ export class CharacterStoreService {
     this.setCharacters(updatedList);
   }
 
-
+  getCharacterById(id: string): Character | undefined {
+    return this.currentCharacters.find(c => c.id === id);
+  }
 
 }

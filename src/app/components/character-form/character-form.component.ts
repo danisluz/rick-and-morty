@@ -50,27 +50,41 @@ export class CharacterFormComponent implements OnInit {
     if (this.characterId) {
       this.editing = true;
 
-      this.rickAndMortyService.getCharacterById(this.characterId).subscribe({
-        next: (character: Character) => {
-          console.log('Personagem carregado da API:', character);
+      // ✅ Primeiro tenta buscar localmente
+      const localCharacter = this.characterStoreService.getCharacterById(this.characterId);
 
-          this.characterForm.patchValue({
-            name: character.name,
-            species: character.species,
-            status: character.status,
-            gender: character.gender,
-            type: character.type,
-            origin: character.origin?.name || '',
-            location: character.location?.name || '',
-            image: character.image
-          });
-        },
-        error: (err) => {
-          console.error('Erro ao buscar personagem:', err);
-        }
-      });
+      if (localCharacter) {
+        console.log('Personagem encontrado localmente:', localCharacter);
+
+        this.patchForm(localCharacter);
+      } else {
+        // ✅ Só chama a API se não encontrar localmente
+        this.rickAndMortyService.getCharacterById(this.characterId).subscribe({
+          next: (character: Character) => {
+            console.log('Personagem carregado da API:', character);
+            this.patchForm(character);
+          },
+          error: (err) => {
+            console.error('Erro ao buscar personagem na API:', err);
+          }
+        });
+      }
     }
   }
+
+  private patchForm(character: Character): void {
+    this.characterForm.patchValue({
+      name: character.name,
+      species: character.species,
+      status: character.status,
+      gender: character.gender,
+      type: character.type,
+      origin: character.origin?.name || '',
+      location: character.location?.name || '',
+      image: character.image
+    });
+  }
+
 
   onSubmit(): void {
     const formValue = this.characterForm.value;
