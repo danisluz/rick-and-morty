@@ -105,7 +105,7 @@ export class CharacterFormComponent implements OnInit {
       type: formValue.type,
       origin: { name: formValue.origin },
       location: { name: formValue.location },
-      image: formValue.image || '/default-character.jpeg',
+      image: formValue.image || 'assets/default-character.jpeg',
       episode: [],
       edited: true
     };
