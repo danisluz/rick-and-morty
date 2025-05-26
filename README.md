@@ -1,59 +1,150 @@
-# RickAndMorty
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.6.
+# Rick and Morty - Angular App
 
-## Development server
+Aplicação web desenvolvida em **Angular 19 (standalone components)** que consome a **API pública do Rick and Morty** para exibir, criar, editar e excluir personagens, utilizando **Bootstrap** e **SCSS** para estilização.
 
-To start a local development server, run:
+Este projeto foi desenvolvido com foco na prática e demonstração de habilidades com **Angular moderno**, **componentização**, **gestão de estado**, **rotas** e integração com **APIs REST**.
+
+---
+
+## Tecnologias utilizadas
+
+- Angular 19 (standalone components)
+- TypeScript
+- RxJS
+- Bootstrap 5
+- SCSS (SASS)
+- Vite
+
+---
+
+## Como rodar o projeto localmente
+
+1. **Clone o repositório:**
+
+```bash
+git clone https://github.com/seu-usuario/rick-and-morty.git
+cd rick-and-morty
+```
+
+2. **Instale as dependências:**
+
+```bash
+npm install
+```
+
+ou
+
+```bash
+yarn
+```
+
+3. **Execute o servidor de desenvolvimento:**
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+4. **Acesse:**
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+http://localhost:4200/
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
+## Scripts úteis
+
+| Comando      | Descrição                                      |
+| -------------| ---------------------------------------------- |
+| `ng serve`   | Inicia o servidor de desenvolvimento           |
+| `ng build`   | Realiza o build otimizado do projeto           |
+| `ng test`    | Executa os testes unitários com Karma          |
+| `ng e2e`     | Executa os testes end-to-end (ajuste necessário)|
+
+---
+
+## Estrutura do projeto
+
+```
+src/
+ ├── app/
+ │    ├── components/
+ │    │    ├── about/              # Página sobre
+ │    │    ├── character-card/     # Exibição de personagens em cards
+ │    │    ├── character-form/     # Formulário de criação e edição
+ │    │    ├── character-list/     # Listagem de personagens
+ │    │    └── character-modal/    # Modal de visualização de personagem
+ │    │
+ │    ├── models/
+ │    │    ├── character.enums.ts  # Enumerações para personagens
+ │    │    └── character.model.ts  # Modelo de dados do personagem
+ │    │
+ │    ├── services/
+ │    │    ├── character-modal.service.ts        # Lógica do modal
+ │    │    ├── character-store.service.ts        # Gerenciamento de estado dos personagens
+ │    │    └── rick-and-morty.service.ts         # Comunicação com a API Rick and Morty
+ │    │
+ │    ├── shared/
+ │    │    ├── alert/            # Componentes de alerta
+ │    │    └── confirm-modal/    # Componentes de confirmação
+ │    │
+ │    ├── app.component.*        # Arquivo raiz da aplicação
+ │    ├── app.config.*           # Configurações do Angular
+ │    └── app.routes.*           # Configuração das rotas
+ │
+ ├── styles/
+ │    └── _variables.scss        # Variáveis globais de estilo
+ │
+ └── public/
+      ├── default-character.jpeg # Imagem padrão de personagem
+      ├── favicon.ico
+      └── logo.svg
 ```
 
-## Building
+---
 
-To build the project run:
+## Funcionalidades implementadas
 
-```bash
-ng build
-```
+- Listagem paginada de personagens.
+- Visualização de detalhes em modal.
+- Edição e criação de personagens via formulário.
+- Exclusão com confirmação.
+- Feedbacks com toasts de sucesso e erro.
+- Responsividade com Bootstrap.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## Testes
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+O projeto utiliza **Karma** e **Jasmine** para testes unitários. Para rodar:
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+Para testes end-to-end, configure a ferramenta de sua preferência (ex.: Cypress, Playwright).
 
-For end-to-end (e2e) testing, run:
+---
 
-```bash
-ng e2e
-```
+## Referências
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+- [API Rick and Morty](https://rickandmortyapi.com/)
+- [Documentação Angular](https://angular.dev/)
+- [Bootstrap](https://getbootstrap.com/)
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Autor
+
+Daniel Luz  
+[LinkedIn](https://www.linkedin.com/in/seu-perfil)  
+[GitHub](https://github.com/seu-usuario)
+
+---
+
+## Objetivo
+
+Este projeto foi desenvolvido com o objetivo de consolidar conhecimentos e demonstrar habilidades práticas em **desenvolvimento frontend**, com foco em **Angular**, **integração de APIs** e **boas práticas de componentização e arquitetura**.
+
+---
