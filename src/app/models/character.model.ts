@@ -5,9 +5,9 @@ export interface Character {
   species: string;
   type: string;
   gender: string;
-  image: string;
-  origin?: LocationReference;
-  location?: LocationReference;
+  image?: string;
+  origin?: { name: string };
+  location?: { name: string };
   episode?: string[];
 }
 

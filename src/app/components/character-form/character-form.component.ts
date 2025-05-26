@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CharacterStoreService } from '../../services/character-store.service';
 import { RickAndMortyService } from '../../services/rick-and-morty.service';
@@ -21,6 +21,8 @@ export class CharacterFormComponent implements OnInit {
 
   statusList = ['Alive', 'Dead', 'unknown'];
   genderList = ['Male', 'Female', 'Genderless', 'unknown'];
+  speciesList = ['Human', 'Alien', 'Robot', 'Cronenberg', 'Mythological Creature'];
+  typesList = ['Hero', 'Villain', 'Neutral', 'Unknown'];
 
   constructor(
     private fb: FormBuilder,
@@ -31,23 +33,15 @@ export class CharacterFormComponent implements OnInit {
     private location: Location
   ) {
     this.characterForm = this.fb.group({
-      id: [''],
-      name: ['', Validators.required],
+      name: [''],
       species: [''],
-      status: ['unknown'],
-      gender: ['unknown'],
+      status: [''],
+      gender: [''],
       type: [''],
-      origin: this.fb.group({
-        name: [{ value: '', disabled: true }],
-        url: [{ value: '', disabled: true }]
-      }),
-      location: this.fb.group({
-        name: [{ value: '', disabled: true }],
-        url: [{ value: '', disabled: true }]
-      }),
-      image: [{ value: '', disabled: true }]
+      origin: [''],
+      location: [''],
+      image: ['']
     });
-
   }
 
   ngOnInit(): void {
@@ -59,7 +53,17 @@ export class CharacterFormComponent implements OnInit {
       this.rickAndMortyService.getCharacterById(this.characterId).subscribe({
         next: (character: Character) => {
           console.log('Personagem carregado da API:', character);
-          this.characterForm.patchValue(character);
+
+          this.characterForm.patchValue({
+            name: character.name,
+            species: character.species,
+            status: character.status,
+            gender: character.gender,
+            type: character.type,
+            origin: character.origin?.name || '',
+            location: character.location?.name || '',
+            image: character.image
+          });
         },
         error: (err) => {
           console.error('Erro ao buscar personagem:', err);
@@ -68,30 +72,30 @@ export class CharacterFormComponent implements OnInit {
     }
   }
 
-
   onSubmit(): void {
-    const formValue = this.characterForm.getRawValue();
+    const formValue = this.characterForm.value;
 
     const character: Character = {
-      id: formValue.id,
+      id: this.characterId ?? Math.random().toString(36).substring(2, 9),
       name: formValue.name,
       species: formValue.species,
       status: formValue.status,
       gender: formValue.gender,
       type: formValue.type,
-      image: formValue.image
+      origin: { name: formValue.origin },
+      location: { name: formValue.location },
+      image: formValue.image,
+      episode: [],
     };
 
     if (this.editing) {
       this.characterStoreService.updateCharacter(character);
     } else {
-      character.id = Math.random().toString(36).substring(2, 9);
       this.characterStoreService.addCharacterAtTop(character);
     }
 
     this.router.navigate(['/']);
   }
-
 
   onCancel(): void {
     this.router.navigate(['/']);

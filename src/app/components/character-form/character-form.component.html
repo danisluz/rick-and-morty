@@ -1,54 +1,66 @@
 <div class="container mt-4">
 
-  <button type="button" class="btn btn-outline-secondary mb-3" (click)="onBack()">
+  <button type="button" class="btn btn-link text-success mb-3 p-0" (click)="onBack()">
     ← Voltar
   </button>
 
   <h2 class="mb-4">{{ editing ? 'Editar' : 'Criar' }} Personagem</h2>
 
   <form [formGroup]="characterForm" (ngSubmit)="onSubmit()">
+
     <div class="mb-3">
       <label class="form-label">Nome</label>
-      <input formControlName="name" class="form-control" />
+      <input formControlName="name" class="form-control bg-dark text-light border-0 rounded-3"
+             placeholder="Find by name"/>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Espécie</label>
+        <select formControlName="species" class="form-select bg-dark text-light border-0 rounded-3">
+          <option *ngFor="let specie of speciesList" [value]="specie">{{ specie }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Gênero</label>
+        <select formControlName="gender" class="form-select bg-dark text-light border-0 rounded-3">
+          <option *ngFor="let gender of genderList" [value]="gender">{{ gender }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Status</label>
+        <select formControlName="status" class="form-select bg-dark text-light border-0 rounded-3">
+          <option *ngFor="let status of statusList" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Tipo</label>
+        <select formControlName="type" class="form-select bg-dark text-light border-0 rounded-3">
+          <option *ngFor="let type of typesList" [value]="type">{{ type }}</option>
+        </select>
+      </div>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Espécie</label>
-      <input formControlName="species" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Status</label>
-      <select formControlName="status" class="form-select">
-        <option *ngFor="let status of statusList" [value]="status">{{ status }}</option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Gênero</label>
-      <select formControlName="gender" class="form-select">
-        <option *ngFor="let gender of genderList" [value]="gender">{{ gender }}</option>
-      </select>
-    </div>
-
-    <div class="mb-3">
-      <label class="form-label">Tipo</label>
-      <input formControlName="type" class="form-control"/>
-    </div>
-
-    <div formGroupName="origin" class="mb-3">
       <label class="form-label">Origem</label>
-      <input formControlName="name" class="form-control"/>
+      <input formControlName="origin" class="form-control bg-dark text-light border-0 rounded-3" placeholder="Status"/>
     </div>
 
-    <div formGroupName="location" class="mb-3">
+    <div class="mb-3">
       <label class="form-label">Localização</label>
-      <input formControlName="name" class="form-control"/>
+      <input formControlName="location" class="form-control bg-dark text-light border-0 rounded-3"
+             placeholder="Status"/>
     </div>
 
     <div class="mb-3">
       <label class="form-label">URL da Imagem</label>
-      <input formControlName="image" class="form-control" />
+      <input formControlName="image" class="form-control bg-dark text-light border-0 rounded-3"
+             placeholder="Url da imagem"/>
     </div>
 
     <div class="d-flex gap-2">
