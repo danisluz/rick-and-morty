@@ -7,11 +7,12 @@ import { debounceTime, Subject } from 'rxjs';
 import { PLATFORM_ID, Inject } from '@angular/core';
 import { CharacterCardComponent } from '../character-card/character-card.component';
 import { CharacterStoreService } from '../../services/character-store.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-character-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CharacterCardComponent],
+  imports: [CommonModule, FormsModule, CharacterCardComponent, RouterLink],
   templateUrl: './character-list.component.html',
   styleUrls: ['./character-list.component.scss']
 })
