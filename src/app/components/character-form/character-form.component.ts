@@ -52,9 +52,12 @@ export class CharacterFormComponent implements OnInit {
 
       if (character) {
         this.characterForm.patchValue(character);
+      } else {
+        console.warn('Personagem não encontrado para edição:', this.characterId);
       }
     }
   }
+
 
   onSubmit(): void {
     const character: Character = this.characterForm.value;
@@ -62,13 +65,13 @@ export class CharacterFormComponent implements OnInit {
     if (this.editing) {
       this.characterStoreService.updateCharacter(character);
     } else {
-      // Cria ID aleatório ou usa alguma estratégia
       character.id = Math.random().toString(36).substring(2, 9);
       this.characterStoreService.addCharacterAtTop(character);
     }
 
     this.router.navigate(['/']);
   }
+
 
   onCancel(): void {
     this.router.navigate(['/']);

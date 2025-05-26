@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RickAndMortyService } from '../../services/rick-and-morty.service';
 import { Character } from '../../models/character.model';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
-import { PLATFORM_ID, Inject } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
 import { CharacterCardComponent } from '../character-card/character-card.component';
 import { CharacterStoreService } from '../../services/character-store.service';
-import {RouterLink} from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-character-list',
@@ -17,7 +17,6 @@ import {RouterLink} from '@angular/router';
   styleUrls: ['./character-list.component.scss']
 })
 export class CharacterListComponent implements OnInit {
-  characters: Character[] = [];
   currentPage = 1;
   isLoading = false;
   info: any;
@@ -37,7 +36,7 @@ export class CharacterListComponent implements OnInit {
 
   constructor(
     private rickAndMortyService: RickAndMortyService,
-    private characterStoreService: CharacterStoreService,
+    protected characterStoreService: CharacterStoreService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -48,10 +47,6 @@ export class CharacterListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.characterStoreService.characters$.subscribe(chars => {
-      this.characters = chars;
-    });
-
     if (this.isBrowser) {
       window.addEventListener('scroll', this.onScroll.bind(this));
     }
@@ -72,8 +67,6 @@ export class CharacterListComponent implements OnInit {
 
   applyFilters() {
     this.currentPage = 1;
-    // Resetando estado global:
-    this.characterStoreService.setCharacters([]);
     this.loadCharacters();
   }
 
@@ -84,7 +77,7 @@ export class CharacterListComponent implements OnInit {
 
     this.rickAndMortyService.getCharacters(filters).subscribe({
       next: (response) => {
-        if (response) {
+        if (response?.results?.length) {
           if (this.currentPage === 1) {
             this.characterStoreService.setCharacters(response.results);
           } else {
@@ -93,10 +86,13 @@ export class CharacterListComponent implements OnInit {
           }
           this.info = response.info;
           this.currentPage++;
-        } else {
+        } else if (this.currentPage === 1) {
           this.characterStoreService.setCharacters([]);
           this.info = null;
+        } else {
+          console.warn('Nenhum resultado encontrado para próxima página!');
         }
+
         this.loading = false;
       },
       error: (err) => {
@@ -113,9 +109,7 @@ export class CharacterListComponent implements OnInit {
 
     this.rickAndMortyService.getCharacters(filters).subscribe((res) => {
       if (res && res.results) {
-        const current = this.characterStoreService.characters;
-        this.characterStoreService.setCharacters([...current, ...res.results]);
-
+        this.characterStoreService.appendCharacters(res.results);
         this.currentPage++;
       }
       this.isLoading = false;

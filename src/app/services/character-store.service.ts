@@ -12,31 +12,40 @@ export class CharacterStoreService {
   characters$ = this.charactersSubject.asObservable();
 
   get currentCharacters(): Character[] {
-    return [...this.characters];
+    return this.charactersSubject.getValue();
   }
 
   constructor() {}
 
-  setCharacters(characters: Character[]) {
-    this.characters = characters;
-    this.charactersSubject.next([...this.characters]);
+  setCharacters(characters: Character[]): void {
+    this.charactersSubject.next(characters);
   }
 
-  updateCharacter(updatedCharacter: Character) {
-    this.characters = this.characters.map(char =>
-      char.id === updatedCharacter.id ? updatedCharacter : char
+  updateCharacter(updated: Character): void {
+    const updatedList = this.currentCharacters.map(char =>
+      char.id === updated.id ? updated : char
     );
-    this.charactersSubject.next([...this.characters]);
+    this.setCharacters(updatedList);
   }
 
-  deleteCharacter(characterId: string) {
-    this.characters = this.characters.filter((char: Character) => char.id !== characterId);
-    this.charactersSubject.next([...this.characters]);
+
+  deleteCharacter(characterId: string): void {
+    const updatedList = this.currentCharacters.filter(char => char.id !== characterId);
+    this.setCharacters(updatedList);
   }
 
-  addCharacterAtTop(character: Character) {
-    this.characters = [character, ...this.characters];
-    this.charactersSubject.next([...this.characters]);
+
+  addCharacterAtTop(character: Character): void {
+    const updatedList = [character, ...this.currentCharacters];
+    this.setCharacters(updatedList);
   }
+
+  appendCharacters(newCharacters: Character[]): void {
+    const current = this.charactersSubject.getValue();  // PEGA valor mais atualizado.
+    const updatedList = [...current, ...newCharacters];
+    this.setCharacters(updatedList);
+  }
+
+
 
 }

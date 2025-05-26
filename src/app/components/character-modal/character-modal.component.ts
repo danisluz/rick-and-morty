@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CharacterModalService } from '../../services/character-modal.service';
 import { CharacterStoreService } from '../../services/character-store.service';
 import { Character } from '../../models/character.model';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-character-modal',
@@ -16,7 +17,8 @@ export class CharacterModalComponent {
 
   constructor(
     private modalService: CharacterModalService,
-    private storeService: CharacterStoreService
+    private storeService: CharacterStoreService,
+    private router: Router
   ) {
     this.modalService.character$.subscribe(char => this.character = char);
   }
@@ -25,19 +27,19 @@ export class CharacterModalComponent {
     this.modalService.close();
   }
 
-  edit() {
-    if (!this.character) return;
-
-    const updatedCharacter = { ...this.character, name: this.character.name + ' (Editado)' };
-    this.storeService.updateCharacter(updatedCharacter);
-    this.close();
+  edit(): void {
+    if (this.character) {
+      this.router.navigate(['/edit', this.character.id]);
+      this.close();
+    }
   }
 
   delete() {
-    if (this.character) {
+    if (this.character && confirm('Tem certeza que deseja excluir este personagem?')) {
       this.storeService.deleteCharacter(this.character.id);
       this.close();
     }
   }
+
 
 }

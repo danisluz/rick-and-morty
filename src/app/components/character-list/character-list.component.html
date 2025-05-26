@@ -1,57 +1,11 @@
 <div class="container py-4">
-  <div *ngIf="characters?.length; else loading">
+  <div *ngIf="(characterStoreService.characters$ | async)?.length; else loading">
     <div class="row">
-
-      <!-- Filtros -->
-      <div class="filters d-flex align-items-center gap-2 mb-4 flex-wrap">
-        <!-- Filtro por nome -->
-        <div class="select-wrapper position-relative">
-          <i class="bi bi-person filter-icon"></i>
-          <input type="text" class="form-control filter-input ps-5" placeholder="Find by name..."
-                 [ngModel]="filters.name"
-                 (ngModelChange)="onNameChange($event)">
-        </div>
-
-        <!-- Filtro por espécie -->
-        <div class="select-wrapper position-relative">
-          <i class="bi bi-funnel filter-icon"></i>
-          <select class="form-select filter-input ps-5" [(ngModel)]="filters.species">
-            <option value="">Species</option>
-            <option *ngFor="let sp of speciesList" [value]="sp">{{ sp }}</option>
-          </select>
-        </div>
-
-        <!-- Filtro por gênero -->
-        <div class="select-wrapper position-relative">
-          <i class="bi bi-gender-ambiguous filter-icon"></i>
-          <select class="form-select filter-input ps-5" [(ngModel)]="filters.gender">
-            <option value="">Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="genderless">Genderless</option>
-            <option value="unknown">Unknown</option>
-          </select>
-        </div>
-
-        <!-- Filtro por status -->
-        <div class="select-wrapper position-relative">
-          <i class="bi bi-heart-pulse filter-icon"></i>
-          <select class="form-select filter-input ps-5" [(ngModel)]="filters.status">
-            <option value="">Status</option>
-            <option value="alive">Alive</option>
-            <option value="dead">Dead</option>
-            <option value="unknown">Unknown</option>
-          </select>
-        </div>
-
-        <button class="btn btn-purple d-flex align-items-center gap-2" (click)="applyFilters()">
-          <i class="bi bi-search"></i>
-          Search
-        </button>
-      </div>
+      <!-- filtros aqui... -->
 
       <!-- Lista de personagens -->
-      <div class="col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let character of characters">
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-4"
+           *ngFor="let character of characterStoreService.characters$ | async">
         <app-character-card [character]="character"></app-character-card>
       </div>
 
@@ -62,18 +16,15 @@
         </button>
       </div>
 
-      <!-- Spinner carregando mais -->
       <ng-template #loadingMore>
         <span>
           <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           Loading...
         </span>
       </ng-template>
-
     </div>
   </div>
 
-  <!-- Spinner inicial -->
   <ng-template #loading>
     <div class="d-flex justify-content-center py-5">
       <div class="spinner-border text-primary" role="status">
@@ -83,22 +34,14 @@
   </ng-template>
 </div>
 
-
 <button
   class="back-to-top"
   (click)="scrollToTop()"
   *ngIf="showBackToTop"
-  aria-label="Voltar ao topo"
->
+  aria-label="Voltar ao topo">
   <i class="bi bi-chevron-up"></i>
 </button>
 
-<!-- Botão de criar -->
-<a
-  [routerLink]="['/new']"
-  class="btn btn-primary fab-create">
+<a [routerLink]="['/new']" class="btn btn-primary fab-create">
   <i class="bi bi-plus-lg fs-4"></i>
 </a>
-
-
-
