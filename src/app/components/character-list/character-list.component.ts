@@ -8,6 +8,7 @@ import {CharacterCardComponent} from '../character-card/character-card.component
 import {CharacterStoreService} from '../../services/character-store.service';
 import {RouterLink} from '@angular/router';
 import {CharacterType, Gender, Species, Status} from '../../models/character.enums';
+import {ToastService} from '../../shared/toast.service';
 
 @Component({
   selector: 'app-character-list',
@@ -40,6 +41,7 @@ export class CharacterListComponent implements OnInit {
   constructor(
     private rickAndMortyService: RickAndMortyService,
     protected characterStoreService: CharacterStoreService,
+    private toastService: ToastService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -85,33 +87,30 @@ export class CharacterListComponent implements OnInit {
         if (response?.results?.length) {
 
           if (this.currentPage === 1) {
-            // ⚠️ Aqui! Sobrescreve tudo com a nova busca.
             this.characterStoreService.setCharacters(response.results);
           } else {
-            // Paginação: adiciona
             this.characterStoreService.appendCharacters(response.results);
           }
 
           this.info = response.info;
           this.currentPage++;
         } else if (this.currentPage === 1) {
-          // Não achou nada na busca, zera
           this.characterStoreService.setCharacters([]);
           this.info = null;
         } else {
-          console.warn('Nenhum resultado encontrado para próxima página!');
+          console.warn('No results found for next page!');
+          this.toastService.show('No results found for next page!', 'warning');
         }
 
         this.loading = false;
       },
       error: (err) => {
         console.error('Error when searching for characters:', err);
+        this.toastService.show('Error when searching for characters!', 'danger');
         this.loading = false;
       }
     });
   }
-
-
 
   loadMore() {
     this.isLoading = true;
@@ -129,14 +128,12 @@ export class CharacterListComponent implements OnInit {
 
   onScroll() {
     if (!this.isBrowser) return;
-
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
     this.showBackToTop = scrollTop > 500;
   }
 
   scrollToTop() {
     if (!this.isBrowser) return;
-
     window.scrollTo({top: 0, behavior: 'smooth'});
   }
 }

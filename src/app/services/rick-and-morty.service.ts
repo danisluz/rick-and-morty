@@ -10,7 +10,10 @@ export class RickAndMortyService {
 
   private baseUrl = 'https://rickandmortyapi.com/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: any
+  ) {}
 
   getCharacters(filters: any): Observable<CharactersResponse | null> {
     let params = new HttpParams().set('page', filters.page || 1);
@@ -23,10 +26,12 @@ export class RickAndMortyService {
     return this.http.get<CharactersResponse>(`${this.baseUrl}/character/`, { params }).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404) {
-          console.warn('Nenhum personagem encontrado com os filtros:', filters);
+          console.warn('No characters found with filters:', filters);
+          this.toastService.show('No characters found with filters!', 'warning');
           return of(null);
         } else {
           console.error('Erro na API Rick and Morty:', error);
+          this.toastService.show('Rick and Morty system Error!', 'danger');
           return throwError(() => error);
         }
       })
@@ -36,7 +41,8 @@ export class RickAndMortyService {
   getCharacterById(id: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/character/${id}`).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.error(`Erro ao buscar personagem com id ${id}:`, error);
+        console.error(`Error searching for character ${id}:`, error);
+        this.toastService.show('Error searching for character!', 'danger');
         return throwError(() => error);
       })
     );
