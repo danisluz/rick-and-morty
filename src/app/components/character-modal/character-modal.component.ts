@@ -5,6 +5,7 @@ import { CharacterStoreService } from '../../services/character-store.service';
 import { Character } from '../../models/character.model';
 import {Router} from '@angular/router';
 import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
+import {ToastService} from '../../shared/toast.service';
 
 @Component({
   selector: 'app-character-modal',
@@ -20,7 +21,8 @@ export class CharacterModalComponent {
   constructor(
     private modalService: CharacterModalService,
     private storeService: CharacterStoreService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {
     this.modalService.character$.subscribe(char => this.character = char);
   }
@@ -39,10 +41,14 @@ export class CharacterModalComponent {
   deleteCharacter() {
     if (this.character) {
       this.storeService.deleteCharacter(this.character.id);
+
+      this.toastService.show('Character deleted successfully!', 'success');
+
       this.closeConfirmModal();
       this.close();
     }
   }
+
 
   openConfirmModal() {
     console.log('openConfirmModal');

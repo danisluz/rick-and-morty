@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {catchError, Observable, of, throwError} from 'rxjs';
 import { CharactersResponse } from '../models/character.model';
+import {ToastService} from '../shared/toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class RickAndMortyService {
 
   constructor(
     private http: HttpClient,
-    private toastService: any
+    private toastService: ToastService
   ) {}
 
   getCharacters(filters: any): Observable<CharactersResponse | null> {
