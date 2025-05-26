@@ -10,19 +10,17 @@ describe('RickAndMortyService', () => {
   let toastServiceSpy: jasmine.SpyObj<ToastService>;
 
   beforeEach(() => {
-    const toastSpy = jasmine.createSpyObj('ToastService', ['show']);
-
+    toastServiceSpy = jasmine.createSpyObj('ToastService', ['show']);
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
         RickAndMortyService,
-        { provide: ToastService, useValue: toastSpy }
+        { provide: ToastService, useValue: toastServiceSpy }
       ]
     });
 
     service = TestBed.inject(RickAndMortyService);
     httpMock = TestBed.inject(HttpTestingController);
-    toastServiceSpy = TestBed.inject(ToastService) as jasmine.SpyObj<ToastService>;
   });
 
   afterEach(() => {
@@ -86,6 +84,22 @@ describe('RickAndMortyService', () => {
     req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
   });
 
+  it('should handle non-HttpErrorResponse error (no status) in getCharacters', (done) => {
+    // Simula erro SEM status (ex: erro de rede)
+    const errorEvent = new ErrorEvent('Network error');
+
+    service.getCharacters({ page: 1 }).subscribe({
+      next: () => fail('should have failed'),
+      error: err => {
+        expect(toastServiceSpy.show).toHaveBeenCalledWith('Rick and Morty system Error!', 'danger');
+        done();
+      }
+    });
+
+    const req = httpMock.expectOne(`${service['baseUrl']}/character/?page=1`);
+    req.error(errorEvent as any);
+  });
+
   it('should get character by id successfully', (done) => {
     const mockCharacter = { id: 1, name: 'Rick Sanchez' };
 
@@ -126,6 +140,7 @@ describe('RickAndMortyService', () => {
 
     const req = httpMock.expectOne(req =>
       req.url.includes('/character/') &&
+      req.params.get('page') === '1' &&
       !req.params.has('name') &&
       !req.params.has('species') &&
       !req.params.has('gender') &&
@@ -188,21 +203,6 @@ describe('RickAndMortyService', () => {
     req.flush(mockResponse);
   });
 
-  it('should handle non-HttpErrorResponse errors gracefully in getCharacters', (done) => {
-    const error = new ErrorEvent('Network error');
-
-    service.getCharacters({ page: 1 }).subscribe({
-      next: () => fail('should have failed'),
-      error: err => {
-        expect(toastServiceSpy.show).toHaveBeenCalledWith('Rick and Morty system Error!', 'danger');
-        done();
-      }
-    });
-
-    const req = httpMock.expectOne(`${service['baseUrl']}/character/?page=1`);
-    req.error(error);
-  });
-
   it('should handle getCharacterById with empty id and show error toast', (done) => {
     service.getCharacterById('').subscribe({
       next: () => fail('should have failed'),
@@ -244,4 +244,5 @@ describe('RickAndMortyService', () => {
     const req = httpMock.expectOne(`${service['baseUrl']}/character/1`);
     req.error(errorEvent);
   });
+
 });
