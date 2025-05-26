@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CharacterStoreService } from '../../services/character-store.service';
-import { RickAndMortyService } from '../../services/rick-and-morty.service';
-import { Character } from '../../models/character.model';
-import { Location } from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import {CharacterStoreService} from '../../services/character-store.service';
+import {RickAndMortyService} from '../../services/rick-and-morty.service';
+import {Character} from '../../models/character.model';
+import {Location} from '@angular/common';
+import {CharacterType, Gender, Species, Status} from '../../models/character.enums';
 
 @Component({
   selector: 'app-character-form',
@@ -19,10 +20,11 @@ export class CharacterFormComponent implements OnInit {
   editing = false;
   characterId: string | null = null;
 
-  statusList = ['Alive', 'Dead', 'unknown'];
-  genderList = ['Male', 'Female', 'Genderless', 'unknown'];
-  speciesList = ['Human', 'Alien', 'Robot', 'Cronenberg', 'Mythological Creature'];
-  typesList = ['Hero', 'Villain', 'Neutral', 'Unknown'];
+  statusList = Object.values(Status);
+  genderList = Object.values(Gender);
+  speciesList = Object.values(Species);
+  typesList = Object.values(CharacterType);
+
 
   constructor(
     private fb: FormBuilder,
@@ -50,18 +52,13 @@ export class CharacterFormComponent implements OnInit {
     if (this.characterId) {
       this.editing = true;
 
-      // ✅ Primeiro tenta buscar localmente
       const localCharacter = this.characterStoreService.getCharacterById(this.characterId);
 
       if (localCharacter) {
-        console.log('Personagem encontrado localmente:', localCharacter);
-
         this.patchForm(localCharacter);
       } else {
-        // ✅ Só chama a API se não encontrar localmente
         this.rickAndMortyService.getCharacterById(this.characterId).subscribe({
           next: (character: Character) => {
-            console.log('Personagem carregado da API:', character);
             this.patchForm(character);
           },
           error: (err) => {
@@ -96,10 +93,11 @@ export class CharacterFormComponent implements OnInit {
       status: formValue.status,
       gender: formValue.gender,
       type: formValue.type,
-      origin: { name: formValue.origin },
-      location: { name: formValue.location },
+      origin: {name: formValue.origin},
+      location: {name: formValue.location},
       image: formValue.image,
       episode: [],
+      edited: true
     };
 
     if (this.editing) {

@@ -9,6 +9,7 @@ export interface Character {
   origin?: { name: string };
   location?: { name: string };
   episode?: string[];
+  edited?: boolean;
 }
 
 export interface LocationReference {

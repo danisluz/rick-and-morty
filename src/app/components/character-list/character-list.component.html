@@ -2,6 +2,51 @@
   <div *ngIf="(characterStoreService.characters$ | async)?.length; else loading">
     <div class="row">
       <!-- filtros aqui... -->
+      <div class="filters d-flex align-items-center gap-2 mb-4 flex-wrap">
+        <div class="select-wrapper position-relative">
+          <i class="bi bi-person filter-icon"></i>
+          <input type="text" class="form-control filter-input ps-5" placeholder="Find by name..."
+                 [ngModel]="filters.name"
+                 (ngModelChange)="onNameChange($event)">
+        </div>
+
+        <div class="select-wrapper position-relative">
+          <i class="bi bi-funnel filter-icon"></i>
+          <select class="form-select filter-input ps-5"
+                  [(ngModel)]="filters.species"
+                  (change)="applyFilters()">
+            <option value="">Species</option>
+            <option *ngFor="let sp of speciesList" [value]="sp">{{ sp }}</option>
+          </select>
+        </div>
+
+        <div class="select-wrapper position-relative">
+          <i class="bi bi-gender-ambiguous filter-icon"></i>
+          <select class="form-select filter-input ps-5"
+                  [(ngModel)]="filters.gender"
+                  (change)="applyFilters()">
+            <option value="">Gender</option>
+            <option *ngFor="let sp of genderList" [value]="sp">{{ sp }}</option>
+          </select>
+        </div>
+
+
+        <div class="select-wrapper position-relative">
+          <i class="bi bi-heart-pulse filter-icon"></i>
+          <select class="form-select filter-input ps-5"
+                  [(ngModel)]="filters.status"
+                  (change)="applyFilters()">
+            <option value="">Status</option>
+            <option *ngFor="let sp of statusList" [value]="sp">{{ sp }}</option>
+          </select>
+        </div>
+
+        <button class="btn btn-purple d-flex align-items-center gap-2" (click)="applyFilters()">
+          <i class="bi bi-search"></i>
+          Search
+        </button>
+      </div>
+
 
       <!-- Lista de personagens -->
       <div class="col-sm-6 col-md-4 col-lg-3 mb-4"

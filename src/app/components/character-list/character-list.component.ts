@@ -1,13 +1,13 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RickAndMortyService } from '../../services/rick-and-morty.service';
-import { Character } from '../../models/character.model';
-import { FormsModule } from '@angular/forms';
-import { debounceTime, Subject } from 'rxjs';
-import { PLATFORM_ID } from '@angular/core';
-import { CharacterCardComponent } from '../character-card/character-card.component';
-import { CharacterStoreService } from '../../services/character-store.service';
-import { RouterLink } from '@angular/router';
+import {Component, OnInit, Inject} from '@angular/core';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
+import {RickAndMortyService} from '../../services/rick-and-morty.service';
+import {FormsModule} from '@angular/forms';
+import {debounceTime, Subject} from 'rxjs';
+import {PLATFORM_ID} from '@angular/core';
+import {CharacterCardComponent} from '../character-card/character-card.component';
+import {CharacterStoreService} from '../../services/character-store.service';
+import {RouterLink} from '@angular/router';
+import {CharacterType, Gender, Species, Status} from '../../models/character.enums';
 
 @Component({
   selector: 'app-character-list',
@@ -32,7 +32,10 @@ export class CharacterListComponent implements OnInit {
     status: ''
   };
 
-  speciesList = ['Human', 'Alien', 'Robot', 'Animal', 'Mythological', 'Unknown'];
+  statusList = Object.values(Status);
+  genderList = Object.values(Gender);
+  speciesList = Object.values(Species);
+  typesList = Object.values(CharacterType);
 
   constructor(
     private rickAndMortyService: RickAndMortyService,
@@ -63,7 +66,6 @@ export class CharacterListComponent implements OnInit {
     }
   }
 
-
   onNameChange(name: string) {
     this.nameChanged$.next(name);
   }
@@ -81,16 +83,31 @@ export class CharacterListComponent implements OnInit {
     this.rickAndMortyService.getCharacters(filters).subscribe({
       next: (response) => {
         if (response?.results?.length) {
+          const localChars = this.characterStoreService.currentCharacters.filter(
+            c => c.id.startsWith('local-') || c.edited
+          );
+
+          // Elimina duplicados da API
+          const nonDuplicated = response.results.filter(apiChar =>
+            !localChars.some(localChar => localChar.id === apiChar.id)
+          );
+
           if (this.currentPage === 1) {
-            this.characterStoreService.setCharacters(response.results);
+            // ✅ Só coloca locais + novos da API
+            this.characterStoreService.setCharacters([...localChars, ...nonDuplicated]);
           } else {
-            const current = this.characterStoreService.currentCharacters;
-            this.characterStoreService.setCharacters([...current, ...response.results]);
+            // ✅ Para paginação, append direto
+            this.characterStoreService.appendCharacters(nonDuplicated);
           }
+
           this.info = response.info;
           this.currentPage++;
         } else if (this.currentPage === 1) {
-          this.characterStoreService.setCharacters([]);
+          // ✅ Se nenhum resultado e é a primeira página, mantém só locais
+          const localChars = this.characterStoreService.currentCharacters.filter(
+            c => c.id.startsWith('local-') || c.edited
+          );
+          this.characterStoreService.setCharacters(localChars);
           this.info = null;
         } else {
           console.warn('Nenhum resultado encontrado para próxima página!');
@@ -105,10 +122,11 @@ export class CharacterListComponent implements OnInit {
     });
   }
 
+
   loadMore() {
     this.isLoading = true;
 
-    const filters = { ...this.filters, page: this.currentPage };
+    const filters = {...this.filters, page: this.currentPage};
 
     this.rickAndMortyService.getCharacters(filters).subscribe((res) => {
       if (res && res.results) {
@@ -129,6 +147,6 @@ export class CharacterListComponent implements OnInit {
   scrollToTop() {
     if (!this.isBrowser) return;
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({top: 0, behavior: 'smooth'});
   }
 }

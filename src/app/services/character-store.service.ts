@@ -11,11 +11,11 @@ export class CharacterStoreService {
 
   characters$ = this.charactersSubject.asObservable();
 
+  constructor() {}
+
   get currentCharacters(): Character[] {
     return this.charactersSubject.getValue();
   }
-
-  constructor() {}
 
   setCharacters(characters: Character[]): void {
     this.charactersSubject.next(characters);
@@ -23,7 +23,7 @@ export class CharacterStoreService {
 
   updateCharacter(updated: Character): void {
     const updatedList = this.currentCharacters.map(char =>
-      char.id === updated.id ? updated : char
+      char.id.toString() === updated.id.toString() ? { ...updated } : char
     );
     this.setCharacters(updatedList);
   }
