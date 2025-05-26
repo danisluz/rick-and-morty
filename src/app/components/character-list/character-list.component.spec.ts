@@ -308,4 +308,67 @@ describe('CharacterListComponent', () => {
     expect(component['nameChangedSub'].unsubscribe).toHaveBeenCalled();
   });
 
+  it('should call loadMore only once when loading or isLoading is true', () => {
+    component.loading = true;
+    spyOn(component, 'loadMore').and.callThrough();
+    component.onScroll();
+    expect(component.loadMore).not.toHaveBeenCalled();
+
+    component.loading = false;
+    component.isLoading = true;
+    component.onScroll();
+    expect(component.loadMore).not.toHaveBeenCalled();
+  });
+
+  it('should handle debounce onNameChange with empty and non-empty string', fakeAsync(() => {
+    spyOn(component, 'applyFilters');
+    component.onNameChange('Rick');
+    tick(300);
+    expect(component.filters.name).toBe('Rick');
+    expect(component.applyFilters).toHaveBeenCalled();
+
+    component.onNameChange('');
+    tick(300);
+    expect(component.filters.name).toBe('');
+    expect(component.applyFilters).toHaveBeenCalledTimes(2);
+  }));
+
+  it('should unsubscribe from nameChanged$ on ngOnDestroy', () => {
+    component['nameChangedSub'] = jasmine.createSpyObj('Subscription', ['unsubscribe']);
+    component.ngOnDestroy();
+    expect(component['nameChangedSub'].unsubscribe).toHaveBeenCalled();
+  });
+
+  it('should scrollToTop only when isBrowser is true', () => {
+    const scrollSpy = spyOn(window, 'scrollTo').and.callFake(() => {});
+
+    component.isBrowser = false;
+    component.scrollToTop();
+    expect(scrollSpy).not.toHaveBeenCalled();
+
+    component.isBrowser = true;
+    component.scrollToTop();
+
+    expect(scrollSpy).toHaveBeenCalled();
+    const args = scrollSpy.calls.mostRecent().args[0];
+    expect(args).toEqual(jasmine.objectContaining({ top: 0, behavior: 'smooth' }));
+  });
+
+
+  it('should set showBackToTop correctly based on scroll position', () => {
+    const spy = spyOnProperty(window, 'pageYOffset', 'get').and.returnValue(600);
+
+    component.isBrowser = true;
+    component.loading = false;
+    component.isLoading = false;
+    component.onScroll();
+    expect(component.showBackToTop).toBeTrue();
+
+    // Altera o retorno do spy já criado, não cria outro!
+    spy.and.returnValue(0);
+    component.onScroll();
+    expect(component.showBackToTop).toBeFalse();
+
+    spy.and.callThrough();
+  });
 });

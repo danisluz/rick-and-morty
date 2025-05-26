@@ -33,7 +33,7 @@ describe('RickAndMortyService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get characters successfully with filters', () => {
+  it('should get characters successfully with filters', (done) => {
     const mockResponse: CharactersResponse = {
       info: { count: 1, pages: 1, next: null, prev: null },
       results: [{
@@ -51,6 +51,7 @@ describe('RickAndMortyService', () => {
 
     service.getCharacters({ page: 1, name: 'Rick' }).subscribe(response => {
       expect(response).toEqual(mockResponse);
+      done();
     });
 
     const req = httpMock.expectOne(req =>
@@ -60,22 +61,24 @@ describe('RickAndMortyService', () => {
     req.flush(mockResponse);
   });
 
-  it('should handle 404 error on getCharacters and show warning toast', () => {
+  it('should handle 404 error on getCharacters and show warning toast', (done) => {
     service.getCharacters({ page: 999 }).subscribe(response => {
       expect(response).toBeNull();
       expect(toastServiceSpy.show).toHaveBeenCalledWith('No characters found with filters!', 'warning');
+      done();
     });
 
     const req = httpMock.expectOne(`${service['baseUrl']}/character/?page=999`);
     req.flush('Not found', { status: 404, statusText: 'Not Found' });
   });
 
-  it('should handle generic error on getCharacters and show danger toast', () => {
+  it('should handle generic error on getCharacters and show danger toast', (done) => {
     service.getCharacters({ page: 1 }).subscribe({
       next: () => fail('should have failed with error'),
       error: error => {
         expect(error.status).toBe(500);
         expect(toastServiceSpy.show).toHaveBeenCalledWith('Rick and Morty system Error!', 'danger');
+        done();
       }
     });
 
@@ -83,11 +86,12 @@ describe('RickAndMortyService', () => {
     req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
   });
 
-  it('should get character by id successfully', () => {
+  it('should get character by id successfully', (done) => {
     const mockCharacter = { id: 1, name: 'Rick Sanchez' };
 
     service.getCharacterById('1').subscribe(response => {
       expect(response).toEqual(mockCharacter);
+      done();
     });
 
     const req = httpMock.expectOne(`${service['baseUrl']}/character/1`);
@@ -95,12 +99,13 @@ describe('RickAndMortyService', () => {
     req.flush(mockCharacter);
   });
 
-  it('should handle error on getCharacterById and show danger toast', () => {
+  it('should handle error on getCharacterById and show danger toast', (done) => {
     service.getCharacterById('999').subscribe({
       next: () => fail('should have failed with error'),
       error: error => {
         expect(error.status).toBe(500);
         expect(toastServiceSpy.show).toHaveBeenCalledWith('Error searching for character!', 'danger');
+        done();
       }
     });
 
@@ -108,7 +113,7 @@ describe('RickAndMortyService', () => {
     req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
   });
 
-  it('should call getCharacters with only page filter when others are empty', () => {
+  it('should call getCharacters with only page filter when others are empty', (done) => {
     const mockResponse: CharactersResponse = {
       info: { count: 0, pages: 0, next: null, prev: null },
       results: []
@@ -116,6 +121,7 @@ describe('RickAndMortyService', () => {
 
     service.getCharacters({ page: 1, name: '', species: '', gender: '', status: '' }).subscribe(response => {
       expect(response).toEqual(mockResponse);
+      done();
     });
 
     const req = httpMock.expectOne(req =>
@@ -129,7 +135,7 @@ describe('RickAndMortyService', () => {
     req.flush(mockResponse);
   });
 
-  it('should call getCharacters with default page 1 when filters are empty or undefined', () => {
+  it('should call getCharacters with default page 1 when filters are empty or undefined', (done) => {
     const mockResponse: CharactersResponse = {
       info: { count: 0, pages: 0, next: null, prev: null },
       results: []
@@ -137,6 +143,7 @@ describe('RickAndMortyService', () => {
 
     service.getCharacters({} as any).subscribe(response => {
       expect(response).toEqual(mockResponse);
+      done();
     });
 
     const req = httpMock.expectOne(req =>
@@ -151,7 +158,7 @@ describe('RickAndMortyService', () => {
     req.flush(mockResponse);
   });
 
-  it('should not set query params when filter values are empty strings or null', () => {
+  it('should not set query params when filter values are empty strings or null', (done) => {
     const filters = {
       page: 1,
       name: '',
@@ -166,6 +173,7 @@ describe('RickAndMortyService', () => {
 
     service.getCharacters(filters).subscribe(response => {
       expect(response).toEqual(mockResponse);
+      done();
     });
 
     const req = httpMock.expectOne(req =>
@@ -180,13 +188,14 @@ describe('RickAndMortyService', () => {
     req.flush(mockResponse);
   });
 
-  it('should handle non-HttpErrorResponse errors gracefully in getCharacters', () => {
+  it('should handle non-HttpErrorResponse errors gracefully in getCharacters', (done) => {
     const error = new ErrorEvent('Network error');
 
     service.getCharacters({ page: 1 }).subscribe({
       next: () => fail('should have failed'),
       error: err => {
         expect(toastServiceSpy.show).toHaveBeenCalledWith('Rick and Morty system Error!', 'danger');
+        done();
       }
     });
 
@@ -194,11 +203,12 @@ describe('RickAndMortyService', () => {
     req.error(error);
   });
 
-  it('should handle getCharacterById with empty id and show error toast', () => {
+  it('should handle getCharacterById with empty id and show error toast', (done) => {
     service.getCharacterById('').subscribe({
       next: () => fail('should have failed'),
       error: error => {
         expect(toastServiceSpy.show).toHaveBeenCalledWith('Error searching for character!', 'danger');
+        done();
       }
     });
 
@@ -206,12 +216,13 @@ describe('RickAndMortyService', () => {
     req.flush('Not found', { status: 404, statusText: 'Not Found' });
   });
 
-  it('should handle 404 error on getCharacterById and show danger toast', () => {
+  it('should handle 404 error on getCharacterById and show danger toast', (done) => {
     service.getCharacterById('404').subscribe({
       next: () => fail('should have failed with error'),
       error: error => {
         expect(error.status).toBe(404);
         expect(toastServiceSpy.show).toHaveBeenCalledWith('Error searching for character!', 'danger');
+        done();
       }
     });
 
@@ -219,13 +230,14 @@ describe('RickAndMortyService', () => {
     req.flush('Not Found', { status: 404, statusText: 'Not Found' });
   });
 
-  it('should handle network error on getCharacterById and show danger toast', () => {
+  it('should handle network error on getCharacterById and show danger toast', (done) => {
     const errorEvent = new ErrorEvent('Network error');
 
     service.getCharacterById('1').subscribe({
       next: () => fail('should have failed'),
       error: error => {
         expect(toastServiceSpy.show).toHaveBeenCalledWith('Error searching for character!', 'danger');
+        done();
       }
     });
 

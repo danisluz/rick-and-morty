@@ -112,12 +112,10 @@ export class CharacterListComponent implements OnInit, OnDestroy {
           this.characterStoreService.setCharacters([]);
           this.info = null;
         } else {
-          console.warn('No results found for next page!');
           this.toastService.show('No results found for next page!', 'warning');
         }
       },
       error: err => {
-        console.error('Error when searching for characters:', err);
         this.toastService.show('Error when searching for characters!', 'danger');
       }
     });
