@@ -1,15 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {ToastComponent} from './toast.component';
+import { ToastComponent } from './toast.component';
 
-describe('AlertComponent', () => {
+describe('ToastComponent', () => {
   let component: ToastComponent;
   let fixture: ComponentFixture<ToastComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ToastComponent]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ToastComponent);
     component = fixture.componentInstance;
@@ -18,5 +17,20 @@ describe('AlertComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should assign input properties', () => {
+    component.message = 'Test Message';
+    component.type = 'success';
+    fixture.detectChanges();
+
+    expect(component.message).toBe('Test Message');
+    expect(component.type).toBe('success');
+  });
+
+  it('should clear message on close', () => {
+    component.message = 'Test Message';
+    component.close();
+    expect(component.message).toBeNull();
   });
 });
