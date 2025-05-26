@@ -25,7 +25,7 @@
       <div class="col-12 col-md-6">
         <hr>
         <strong>Location</strong>
-        <p>{{ char.location?.name || 'Location unknown'}}</p>
+        <p>{{ char.location?.name || 'Location unknown' }}</p>
       </div>
       <div class="col-12 col-md-6">
         <hr>
@@ -35,7 +35,8 @@
     </div>
 
     <div class="modal-actions mt-3 d-flex justify-content-end gap-2 flex-column flex-md-row">
-      <button class="btn btn-custom d-inline-flex align-items-center gap-2" (click)="delete()">
+      <button type="button" class="btn btn-custom d-inline-flex align-items-center gap-2"
+              (click)="openConfirmModal()">
         <i class="bi bi-trash"></i>
         Excluir
       </button>
@@ -49,3 +50,15 @@
 
   </div>
 </div>
+
+<app-confirm-modal
+  *ngIf="showConfirmModal"
+  [title]="'Delete Character'"
+  [message]="'Are you sure you want to delete this character?'"
+  [confirmText]="'Delete'"
+  [cancelText]="'Cancel'"
+  (confirm)="deleteCharacter()"
+  (cancel)="closeConfirmModal()">
+</app-confirm-modal>
+
+

@@ -4,16 +4,18 @@ import { CharacterModalService } from '../../services/character-modal.service';
 import { CharacterStoreService } from '../../services/character-store.service';
 import { Character } from '../../models/character.model';
 import {Router} from '@angular/router';
+import {ConfirmModalComponent} from '../../shared/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-character-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ConfirmModalComponent],
   templateUrl: './character-modal.component.html',
   styleUrls: ['./character-modal.component.scss']
 })
 export class CharacterModalComponent {
   character: Character | null = null;
+  showConfirmModal = false;
 
   constructor(
     private modalService: CharacterModalService,
@@ -34,12 +36,21 @@ export class CharacterModalComponent {
     }
   }
 
-  delete() {
-    if (this.character && confirm('Tem certeza que deseja excluir este personagem?')) {
+  deleteCharacter() {
+    if (this.character) {
       this.storeService.deleteCharacter(this.character.id);
+      this.closeConfirmModal();
       this.close();
     }
   }
 
+  openConfirmModal() {
+    console.log('openConfirmModal');
+    this.showConfirmModal = true;
+  }
+
+  closeConfirmModal() {
+    this.showConfirmModal = false;
+  }
 
 }
