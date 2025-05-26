@@ -41,4 +41,39 @@ describe('ConfirmModalComponent', () => {
 
     expect(component.cancel.emit).toHaveBeenCalled();
   });
+
+  it('should render title and message in template', () => {
+    component.title = 'Delete';
+    component.message = 'Are you sure?';
+    component.confirmText = 'Yes';
+    component.cancelText = 'No';
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('.modal-title')?.textContent).toContain('Delete');
+    expect(compiled.querySelector('.modal-body')?.textContent).toContain('Are you sure?');
+    expect(compiled.querySelectorAll('.btn')[0]?.textContent).toContain('No');
+    expect(compiled.querySelectorAll('.btn')[1]?.textContent).toContain('Yes');
+  });
+
+  it('should call cancelAction on cancel button click', () => {
+    spyOn(component, 'cancelAction');
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const cancelBtn = compiled.querySelectorAll('.btn')[0] as HTMLElement;
+    cancelBtn.click();
+
+    expect(component.cancelAction).toHaveBeenCalled();
+  });
+
+  it('should call confirmAction on confirm button click', () => {
+    spyOn(component, 'confirmAction');
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const confirmBtn = compiled.querySelectorAll('.btn')[1] as HTMLElement;
+    confirmBtn.click();
+
+    expect(component.confirmAction).toHaveBeenCalled();
+  });
 });

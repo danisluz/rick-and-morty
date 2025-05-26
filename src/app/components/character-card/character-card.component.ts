@@ -12,11 +12,13 @@ import {NgClass} from '@angular/common';
   styleUrls: ['./character-card.component.scss']
 })
 export class CharacterCardComponent {
-  @Input() character!: Character;
+  @Input() character: Character | undefined;
 
   constructor(private modalService: CharacterModalService) {}
 
   openModal() {
-    this.modalService.open(this.character);
+    if (this.character) {
+      this.modalService.open(this.character);
+    }
   }
 }

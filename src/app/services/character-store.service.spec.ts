@@ -60,14 +60,39 @@ describe('CharacterStoreService', () => {
     });
   });
 
+  it('should not update if character not found', (done) => {
+    service.setCharacters([mockCharacter1]);
+
+    const nonExistingCharacter = { ...mockCharacter2, name: 'Non Existing' };
+    service.updateCharacter(nonExistingCharacter);
+
+    service.characters$.subscribe(characters => {
+      expect(characters.length).toBe(1);
+      expect(characters[0]).toEqual(mockCharacter1);
+      done();
+    });
+  });
+
   it('should delete a character', (done) => {
     service.setCharacters([mockCharacter1, mockCharacter2]);
 
-    service.deleteCharacter(mockCharacter1.id.toString());
+    service.deleteCharacter(mockCharacter1.id);
 
     service.characters$.subscribe(characters => {
       expect(characters.length).toBe(1);
       expect(characters[0]).toEqual(mockCharacter2);
+      done();
+    });
+  });
+
+  it('should not delete if character not found', (done) => {
+    service.setCharacters([mockCharacter1]);
+
+    service.deleteCharacter('999');
+
+    service.characters$.subscribe(characters => {
+      expect(characters.length).toBe(1);
+      expect(characters[0]).toEqual(mockCharacter1);
       done();
     });
   });
@@ -84,6 +109,18 @@ describe('CharacterStoreService', () => {
     });
   });
 
+  it('should add character at top when list is empty', (done) => {
+    service.setCharacters([]);
+
+    service.addCharacterAtTop(mockCharacter1);
+
+    service.characters$.subscribe(characters => {
+      expect(characters.length).toBe(1);
+      expect(characters[0]).toEqual(mockCharacter1);
+      done();
+    });
+  });
+
   it('should append characters', (done) => {
     service.setCharacters([mockCharacter1]);
 
@@ -96,10 +133,30 @@ describe('CharacterStoreService', () => {
     });
   });
 
+  it('should append characters to empty list', (done) => {
+    service.setCharacters([]);
+
+    service.appendCharacters([mockCharacter1, mockCharacter2]);
+
+    service.characters$.subscribe(characters => {
+      expect(characters.length).toBe(2);
+      expect(characters[0]).toEqual(mockCharacter1);
+      expect(characters[1]).toEqual(mockCharacter2);
+      done();
+    });
+  });
+
   it('should get character by id', () => {
     service.setCharacters([mockCharacter1, mockCharacter2]);
 
-    const found = service.getCharacterById(mockCharacter2.id.toString());
+    const found = service.getCharacterById(mockCharacter2.id);
     expect(found).toEqual(mockCharacter2);
+  });
+
+  it('should return undefined if character not found', () => {
+    service.setCharacters([mockCharacter1]);
+
+    const found = service.getCharacterById('999');
+    expect(found).toBeUndefined();
   });
 });

@@ -1,8 +1,8 @@
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
 import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {RickAndMortyService} from '../../services/rick-and-morty.service';
 import {FormsModule} from '@angular/forms';
-import {debounceTime, Subject} from 'rxjs';
+import {debounceTime, finalize, Subject, Subscription} from 'rxjs';
 import {PLATFORM_ID} from '@angular/core';
 import {CharacterCardComponent} from '../character-card/character-card.component';
 import {CharacterStoreService} from '../../services/character-store.service';
@@ -17,7 +17,8 @@ import {ToastService} from '../../shared/toast.service';
   templateUrl: './character-list.component.html',
   styleUrls: ['./character-list.component.scss']
 })
-export class CharacterListComponent implements OnInit {
+export class CharacterListComponent implements OnInit, OnDestroy {
+  private nameChangedSub!: Subscription;
   currentPage = 1;
   isLoading = false;
   info: any;
@@ -56,7 +57,7 @@ export class CharacterListComponent implements OnInit {
       window.addEventListener('scroll', this.onScroll.bind(this));
     }
 
-    this.nameChanged$.pipe(
+    this.nameChangedSub = this.nameChanged$.pipe(
       debounceTime(300)
     ).subscribe(name => {
       this.filters.name = name;
@@ -65,6 +66,12 @@ export class CharacterListComponent implements OnInit {
 
     if (this.characterStoreService.currentCharacters.length === 0) {
       this.loadCharacters();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.nameChangedSub) {
+      this.nameChangedSub.unsubscribe();
     }
   }
 
@@ -77,42 +84,42 @@ export class CharacterListComponent implements OnInit {
     this.loadCharacters();
   }
 
-  loadCharacters() {
-    this.loading = true;
 
-    const filters = { ...this.filters, page: this.currentPage };
+loadCharacters() {
+  this.loading = true;
+  const filters = { ...this.filters, page: this.currentPage };
 
-    this.rickAndMortyService.getCharacters(filters).subscribe({
-      next: (response) => {
-        if (response?.results?.length) {
-
-          if (this.currentPage === 1) {
-            this.characterStoreService.setCharacters(response.results);
-          } else {
-            this.characterStoreService.appendCharacters(response.results);
-          }
-
-          this.info = response.info;
-          this.currentPage++;
-        } else if (this.currentPage === 1) {
-          this.characterStoreService.setCharacters([]);
-          this.info = null;
+  this.rickAndMortyService.getCharacters(filters).pipe(
+    finalize(() => {
+      this.loading = false;  // garante que loading sempre vai virar false
+    })
+  ).subscribe({
+    next: (response) => {
+      if (response?.results?.length) {
+        if (this.currentPage === 1) {
+          this.characterStoreService.setCharacters(response.results);
         } else {
-          console.warn('No results found for next page!');
-          this.toastService.show('No results found for next page!', 'warning');
+          this.characterStoreService.appendCharacters(response.results);
         }
-
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error when searching for characters:', err);
-        this.toastService.show('Error when searching for characters!', 'danger');
-        this.loading = false;
+        this.info = response.info;
+        this.currentPage++;
+      } else if (this.currentPage === 1) {
+        this.characterStoreService.setCharacters([]);
+        this.info = null;
+      } else {
+        console.warn('No results found for next page!');
+        this.toastService.show('No results found for next page!', 'warning');
       }
-    });
-  }
+    },
+    error: (err) => {
+      console.error('Error when searching for characters:', err);
+      this.toastService.show('Error when searching for characters!', 'danger');
+    }
+  });
+}
 
-  loadMore() {
+
+loadMore() {
     this.isLoading = true;
 
     const filters = {...this.filters, page: this.currentPage};
