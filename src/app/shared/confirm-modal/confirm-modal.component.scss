@@ -1,4 +1,4 @@
-@use 'src/styles/variables' as *;
+@use 'variables' as *;
 @use 'sass:color';
 
 .modal {
@@ -47,7 +47,7 @@
   color: $color-text;
 
   &:hover {
-    background-color: darken($color-secondary, 10%);
+    background-color: color.adjust($color-secondary, $lightness: 10%);
     color: $color-text;
   }
 }
