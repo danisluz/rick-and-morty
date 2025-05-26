@@ -1,14 +1,15 @@
-import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
-import {CommonModule, isPlatformBrowser} from '@angular/common';
-import {RickAndMortyService} from '../../services/rick-and-morty.service';
-import {FormsModule} from '@angular/forms';
-import {debounceTime, finalize, Subject, Subscription} from 'rxjs';
-import {PLATFORM_ID} from '@angular/core';
-import {CharacterCardComponent} from '../character-card/character-card.component';
-import {CharacterStoreService} from '../../services/character-store.service';
-import {RouterLink} from '@angular/router';
-import {CharacterType, Gender, Species, Status} from '../../models/character.enums';
-import {ToastService} from '../../shared/toast.service';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
+import { Subscription, Subject } from 'rxjs';
+import { debounceTime, finalize } from 'rxjs/operators';
+import { RickAndMortyService } from '../../services/rick-and-morty.service';
+import { CharacterStoreService } from '../../services/character-store.service';
+import { ToastService } from '../../shared/toast.service';
+import { CharacterCardComponent } from '../character-card/character-card.component';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { CharacterType, Gender, Species, Status } from '../../models/character.enums';
 
 @Component({
   selector: 'app-character-list',
@@ -19,13 +20,15 @@ import {ToastService} from '../../shared/toast.service';
 })
 export class CharacterListComponent implements OnInit, OnDestroy {
   private nameChangedSub!: Subscription;
+  private nameChanged$ = new Subject<string>();
+
   currentPage = 1;
+  loading = false;
   isLoading = false;
-  info: any;
-  loading = true;
-  nameChanged$ = new Subject<string>();
   showBackToTop = false;
   isBrowser = false;
+
+  info: any = null;
 
   filters = {
     name: '',
@@ -73,74 +76,95 @@ export class CharacterListComponent implements OnInit, OnDestroy {
     if (this.nameChangedSub) {
       this.nameChangedSub.unsubscribe();
     }
+    if (this.isBrowser) {
+      window.removeEventListener('scroll', this.onScroll.bind(this));
+    }
   }
 
-  onNameChange(name: string) {
+  onNameChange(name: string): void {
     this.nameChanged$.next(name);
   }
 
-  applyFilters() {
+  applyFilters(): void {
     this.currentPage = 1;
     this.loadCharacters();
   }
 
+  loadCharacters(): void {
+    this.loading = true;
+    const filters = { ...this.filters, page: this.currentPage };
 
-loadCharacters() {
-  this.loading = true;
-  const filters = { ...this.filters, page: this.currentPage };
-
-  this.rickAndMortyService.getCharacters(filters).pipe(
-    finalize(() => {
-      this.loading = false;  // garante que loading sempre vai virar false
-    })
-  ).subscribe({
-    next: (response) => {
-      if (response?.results?.length) {
-        if (this.currentPage === 1) {
-          this.characterStoreService.setCharacters(response.results);
+    this.rickAndMortyService.getCharacters(filters).pipe(
+      finalize(() => {
+        this.loading = false;
+      })
+    ).subscribe({
+      next: response => {
+        if (response?.results?.length) {
+          if (this.currentPage === 1) {
+            this.characterStoreService.setCharacters(response.results);
+          } else {
+            this.characterStoreService.appendCharacters(response.results);
+          }
+          this.info = response.info;
+          this.currentPage++;
+        } else if (this.currentPage === 1) {
+          this.characterStoreService.setCharacters([]);
+          this.info = null;
         } else {
-          this.characterStoreService.appendCharacters(response.results);
+          console.warn('No results found for next page!');
+          this.toastService.show('No results found for next page!', 'warning');
         }
-        this.info = response.info;
-        this.currentPage++;
-      } else if (this.currentPage === 1) {
-        this.characterStoreService.setCharacters([]);
-        this.info = null;
-      } else {
-        console.warn('No results found for next page!');
-        this.toastService.show('No results found for next page!', 'warning');
+      },
+      error: err => {
+        console.error('Error when searching for characters:', err);
+        this.toastService.show('Error when searching for characters!', 'danger');
       }
-    },
-    error: (err) => {
-      console.error('Error when searching for characters:', err);
-      this.toastService.show('Error when searching for characters!', 'danger');
-    }
-  });
-}
-
-
-loadMore() {
-    this.isLoading = true;
-
-    const filters = {...this.filters, page: this.currentPage};
-
-    this.rickAndMortyService.getCharacters(filters).subscribe((res) => {
-      if (res && res.results) {
-        this.characterStoreService.appendCharacters(res.results);
-        this.currentPage++;
-      }
-      this.isLoading = false;
     });
   }
 
-  onScroll() {
-    if (!this.isBrowser) return;
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    this.showBackToTop = scrollTop > 500;
+  loadMore(): void {
+    if (this.loading || this.isLoading) {
+      return; // evita chamadas paralelas
+    }
+
+    this.isLoading = true;
+    const filters = { ...this.filters, page: this.currentPage };
+
+    this.rickAndMortyService.getCharacters(filters).pipe(
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: response => {
+        if (response?.results?.length) {
+          this.characterStoreService.appendCharacters(response.results);
+          this.currentPage++;
+        } else {
+          this.toastService.show('No more characters to load.', 'warning');
+        }
+      },
+      error: err => {
+        this.toastService.show('Failed to load more characters. Please try again later.', 'danger');
+      }
+    });
   }
 
-  scrollToTop() {
+  onScroll(): void {
+    if (!this.isBrowser || this.loading || this.isLoading) return;
+
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const threshold = document.body.offsetHeight - 100; // 100px antes do fim
+
+    if (scrollPosition >= threshold) {
+      this.loadMore();
+    }
+
+    this.showBackToTop = (window.pageYOffset || document.documentElement.scrollTop || 0) > 500;
+  }
+
+  scrollToTop(): void {
     if (!this.isBrowser) return;
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
