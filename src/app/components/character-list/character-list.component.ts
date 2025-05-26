@@ -83,31 +83,20 @@ export class CharacterListComponent implements OnInit {
     this.rickAndMortyService.getCharacters(filters).subscribe({
       next: (response) => {
         if (response?.results?.length) {
-          const localChars = this.characterStoreService.currentCharacters.filter(
-            c => c.id.startsWith('local-') || c.edited
-          );
-
-          // Elimina duplicados da API
-          const nonDuplicated = response.results.filter(apiChar =>
-            !localChars.some(localChar => localChar.id === apiChar.id)
-          );
 
           if (this.currentPage === 1) {
-            // ✅ Só coloca locais + novos da API
-            this.characterStoreService.setCharacters([...localChars, ...nonDuplicated]);
+            // ⚠️ Aqui! Sobrescreve tudo com a nova busca.
+            this.characterStoreService.setCharacters(response.results);
           } else {
-            // ✅ Para paginação, append direto
-            this.characterStoreService.appendCharacters(nonDuplicated);
+            // Paginação: adiciona
+            this.characterStoreService.appendCharacters(response.results);
           }
 
           this.info = response.info;
           this.currentPage++;
         } else if (this.currentPage === 1) {
-          // ✅ Se nenhum resultado e é a primeira página, mantém só locais
-          const localChars = this.characterStoreService.currentCharacters.filter(
-            c => c.id.startsWith('local-') || c.edited
-          );
-          this.characterStoreService.setCharacters(localChars);
+          // Não achou nada na busca, zera
+          this.characterStoreService.setCharacters([]);
           this.info = null;
         } else {
           console.warn('Nenhum resultado encontrado para próxima página!');
@@ -121,6 +110,7 @@ export class CharacterListComponent implements OnInit {
       }
     });
   }
+
 
 
   loadMore() {
