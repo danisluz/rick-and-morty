@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, Inject, OnDestroy, OnInit, PLATFORM_ID} from '@angular/core';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import { CharacterModalService } from '../../services/character-modal.service';
 import { CharacterStoreService } from '../../services/character-store.service';
 import { Character } from '../../models/character.model';
@@ -14,7 +14,7 @@ import {ToastService} from '../../shared/toast.service';
   templateUrl: './character-modal.component.html',
   styleUrls: ['./character-modal.component.scss']
 })
-export class CharacterModalComponent {
+export class CharacterModalComponent implements OnInit, OnDestroy{
   character: Character | null = null;
   showConfirmModal = false;
 
@@ -22,9 +22,22 @@ export class CharacterModalComponent {
     private modalService: CharacterModalService,
     private storeService: CharacterStoreService,
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.modalService.character$.subscribe(char => this.character = char);
+  }
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = '';
+    }
   }
 
   close() {
@@ -58,5 +71,4 @@ export class CharacterModalComponent {
   closeConfirmModal() {
     this.showConfirmModal = false;
   }
-
 }
