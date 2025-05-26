@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CharacterStoreService} from '../../services/character-store.service';
 import {RickAndMortyService} from '../../services/rick-and-morty.service';
@@ -8,6 +8,7 @@ import {Character} from '../../models/character.model';
 import {Location} from '@angular/common';
 import {CharacterType, Gender, Species, Status} from '../../models/character.enums';
 import {ToastService} from '../../shared/toast.service';
+
 
 @Component({
   selector: 'app-character-form',
@@ -37,11 +38,11 @@ export class CharacterFormComponent implements OnInit {
     private toastService: ToastService
   ) {
     this.characterForm = this.fb.group({
-      name: [''],
-      species: [''],
-      status: [''],
-      gender: [''],
-      type: [''],
+      name: ['', Validators.required],
+      species: ['', Validators.required],
+      status: ['', Validators.required],
+      gender: ['', Validators.required],
+      type: ['', Validators.required],
       origin: [''],
       location: [''],
       image: ['']
@@ -87,6 +88,12 @@ export class CharacterFormComponent implements OnInit {
 
 
   onSubmit(): void {
+    if (this.characterForm.invalid) {
+      this.characterForm.markAllAsTouched();
+      this.toastService.show('Fill in all required fields.', 'warning');
+      return;
+    }
+
     const formValue = this.characterForm.value;
 
     const character: Character = {
@@ -96,9 +103,9 @@ export class CharacterFormComponent implements OnInit {
       status: formValue.status,
       gender: formValue.gender,
       type: formValue.type,
-      origin: {name: formValue.origin},
-      location: {name: formValue.location},
-      image: formValue.image,
+      origin: { name: formValue.origin },
+      location: { name: formValue.location },
+      image: formValue.image || '/default-character.jpeg',
       episode: [],
       edited: true
     };
@@ -113,6 +120,7 @@ export class CharacterFormComponent implements OnInit {
 
     this.router.navigate(['/']);
   }
+
 
   onCancel(): void {
     this.router.navigate(['/']);
