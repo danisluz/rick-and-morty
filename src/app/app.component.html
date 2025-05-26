@@ -13,6 +13,8 @@
 
 <main class="content py-4">
   <div class="container">
+    <app-toast [message]="message" [type]="type"></app-toast>
+    <router-outlet></router-outlet>
     <router-outlet></router-outlet>
     <app-character-modal></app-character-modal>
   </div>

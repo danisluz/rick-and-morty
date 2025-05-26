@@ -7,6 +7,7 @@ import {RickAndMortyService} from '../../services/rick-and-morty.service';
 import {Character} from '../../models/character.model';
 import {Location} from '@angular/common';
 import {CharacterType, Gender, Species, Status} from '../../models/character.enums';
+import {ToastService} from '../../shared/toast.service';
 
 @Component({
   selector: 'app-character-form',
@@ -32,7 +33,8 @@ export class CharacterFormComponent implements OnInit {
     private rickAndMortyService: RickAndMortyService,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private toastService: ToastService
   ) {
     this.characterForm = this.fb.group({
       name: [''],
@@ -62,7 +64,8 @@ export class CharacterFormComponent implements OnInit {
             this.patchForm(character);
           },
           error: (err) => {
-            console.error('Erro ao buscar personagem na API:', err);
+            console.error('Error searching for character in API:', err);
+            this.toastService.show('Error searching for character', 'danger');
           }
         });
       }
@@ -102,8 +105,10 @@ export class CharacterFormComponent implements OnInit {
 
     if (this.editing) {
       this.characterStoreService.updateCharacter(character);
+      this.toastService.show('Character updated successfully!', 'success');
     } else {
       this.characterStoreService.addCharacterAtTop(character);
+      this.toastService.show('Character created successfully!', 'success');
     }
 
     this.router.navigate(['/']);
