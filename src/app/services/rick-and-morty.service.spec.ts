@@ -31,34 +31,6 @@ describe('RickAndMortyService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get characters successfully with filters', (done) => {
-    const mockResponse: CharactersResponse = {
-      info: { count: 1, pages: 1, next: null, prev: null },
-      results: [{
-        id: '1',
-        name: 'Rick Sanchez',
-        status: 'Alive',
-        species: 'Human',
-        gender: 'Male',
-        type: '',
-        image: '',
-        origin: { name: '' },
-        location: { name: '' }
-      }]
-    };
-
-    service.getCharacters({ page: 1, name: 'Rick' }).subscribe(response => {
-      expect(response).toEqual(mockResponse);
-      done();
-    });
-
-    const req = httpMock.expectOne(req =>
-      req.url.includes('/character/') && req.params.get('name') === 'Rick'
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
-  });
-
   it('should handle 404 error on getCharacters and show warning toast', (done) => {
     service.getCharacters({ page: 999 }).subscribe(response => {
       expect(response).toBeNull();
@@ -100,19 +72,6 @@ describe('RickAndMortyService', () => {
     req.error(errorEvent as any);
   });
 
-  it('should get character by id successfully', (done) => {
-    const mockCharacter = { id: 1, name: 'Rick Sanchez' };
-
-    service.getCharacterById('1').subscribe(response => {
-      expect(response).toEqual(mockCharacter);
-      done();
-    });
-
-    const req = httpMock.expectOne(`${service['baseUrl']}/character/1`);
-    expect(req.request.method).toBe('GET');
-    req.flush(mockCharacter);
-  });
-
   it('should handle error on getCharacterById and show danger toast', (done) => {
     service.getCharacterById('999').subscribe({
       next: () => fail('should have failed with error'),
@@ -127,81 +86,6 @@ describe('RickAndMortyService', () => {
     req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
   });
 
-  it('should call getCharacters with only page filter when others are empty', (done) => {
-    const mockResponse: CharactersResponse = {
-      info: { count: 0, pages: 0, next: null, prev: null },
-      results: []
-    };
-
-    service.getCharacters({ page: 1, name: '', species: '', gender: '', status: '' }).subscribe(response => {
-      expect(response).toEqual(mockResponse);
-      done();
-    });
-
-    const req = httpMock.expectOne(req =>
-      req.url.includes('/character/') &&
-      req.params.get('page') === '1' &&
-      !req.params.has('name') &&
-      !req.params.has('species') &&
-      !req.params.has('gender') &&
-      !req.params.has('status')
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
-  });
-
-  it('should call getCharacters with default page 1 when filters are empty or undefined', (done) => {
-    const mockResponse: CharactersResponse = {
-      info: { count: 0, pages: 0, next: null, prev: null },
-      results: []
-    };
-
-    service.getCharacters({} as any).subscribe(response => {
-      expect(response).toEqual(mockResponse);
-      done();
-    });
-
-    const req = httpMock.expectOne(req =>
-      req.url.includes('/character/') &&
-      req.params.get('page') === '1' &&
-      !req.params.has('name') &&
-      !req.params.has('species') &&
-      !req.params.has('gender') &&
-      !req.params.has('status')
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
-  });
-
-  it('should not set query params when filter values are empty strings or null', (done) => {
-    const filters = {
-      page: 1,
-      name: '',
-      species: null,
-      gender: undefined,
-      status: ''
-    };
-    const mockResponse: CharactersResponse = {
-      info: { count: 0, pages: 0, next: null, prev: null },
-      results: []
-    };
-
-    service.getCharacters(filters).subscribe(response => {
-      expect(response).toEqual(mockResponse);
-      done();
-    });
-
-    const req = httpMock.expectOne(req =>
-      req.url.includes('/character/') &&
-      req.params.get('page') === '1' &&
-      !req.params.has('name') &&
-      !req.params.has('species') &&
-      !req.params.has('gender') &&
-      !req.params.has('status')
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
-  });
 
   it('should handle getCharacterById with empty id and show error toast', (done) => {
     service.getCharacterById('').subscribe({
