@@ -1,5 +1,4 @@
 <div class="container py-4">
-  <!-- FILTROS: Sempre visíveis -->
   <div class="row">
     <div class="filters d-flex align-items-center gap-2 mb-4 flex-wrap">
       <div class="select-wrapper position-relative">
@@ -46,14 +45,12 @@
     </div>
   </div>
 
-  <!-- LOADER: Mostra enquanto está carregando -->
   <div *ngIf="loading" class="d-flex justify-content-center py-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
 
-  <!-- SEM RESULTADOS: Aparece quando terminou de carregar e não tem personagens -->
   <div *ngIf="!loading && ((characterStoreService.characters$ | async)?.length ?? 0) === 0">
     <div class="d-flex flex-column align-items-center justify-content-center py-5">
       <i class="bi bi-emoji-frown display-1 mb-3 text-secondary"></i>
@@ -61,7 +58,6 @@
     </div>
   </div>
 
-  <!-- LISTA DE PERSONAGENS: Só aparece se tem personagens -->
   <div class="row" *ngIf="!loading && ((characterStoreService.characters$ | async)?.length ?? 0) > 0"
   >
     <div class="col-sm-6 col-md-4 col-lg-3 mb-4"
@@ -84,7 +80,6 @@
   </div>
 </div>
 
-<!-- BOTÃO BACK TO TOP -->
 <button
   class="back-to-top"
   (click)="scrollToTop()"
@@ -93,7 +88,6 @@
   <i class="bi bi-chevron-up"></i>
 </button>
 
-<!-- FAB CREATE CHARACTER -->
 <a [routerLink]="['/new']" class="btn btn-primary fab-create">
   <i class="bi bi-plus-lg fs-4"></i>
 </a>
