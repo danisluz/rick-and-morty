@@ -25,7 +25,21 @@ export interface PaginationInfo {
 }
 
 export interface CharactersResponse {
-  info: PaginationInfo;
+  info: {
+    count: number;
+    pages: number;
+    next: string;
+    prev: string | null;
+  };
   results: Character[];
 }
+
+export interface CharacterFilters {
+  page?: number;
+  name?: string;
+  species?: string;
+  gender?: string;
+  status?: string;
+}
+
 
