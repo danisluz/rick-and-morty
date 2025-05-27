@@ -1,84 +1,90 @@
 <div class="container py-4">
-  <div *ngIf="(characterStoreService.characters$ | async)?.length; else loading">
-    <div class="row">
-      <!-- filtros aqui... -->
-      <div class="filters d-flex align-items-center gap-2 mb-4 flex-wrap">
-        <div class="select-wrapper position-relative">
-          <i class="bi bi-person filter-icon"></i>
-          <input type="text" class="form-control filter-input ps-5" placeholder="Find by name..."
-                 [ngModel]="filters.name"
-                 (ngModelChange)="onNameChange($event)">
-        </div>
-
-        <div class="select-wrapper position-relative">
-          <i class="bi bi-funnel filter-icon"></i>
-          <select class="form-select filter-input ps-5"
-                  [(ngModel)]="filters.species"
-                  (change)="applyFilters()">
-            <option value="">Species</option>
-            <option *ngFor="let sp of speciesList" [value]="sp">{{ sp }}</option>
-          </select>
-        </div>
-
-        <div class="select-wrapper position-relative">
-          <i class="bi bi-gender-ambiguous filter-icon"></i>
-          <select class="form-select filter-input ps-5"
-                  [(ngModel)]="filters.gender"
-                  (change)="applyFilters()">
-            <option value="">Gender</option>
-            <option *ngFor="let sp of genderList" [value]="sp">{{ sp }}</option>
-          </select>
-        </div>
-
-
-        <div class="select-wrapper position-relative">
-          <i class="bi bi-heart-pulse filter-icon"></i>
-          <select class="form-select filter-input ps-5"
-                  [(ngModel)]="filters.status"
-                  (change)="applyFilters()">
-            <option value="">Status</option>
-            <option *ngFor="let sp of statusList" [value]="sp">{{ sp }}</option>
-          </select>
-        </div>
-
-        <button class="btn btn-purple d-flex align-items-center gap-2" (click)="applyFilters()">
-          <i class="bi bi-search"></i>
-          Search
-        </button>
+  <!-- FILTROS: Sempre visíveis -->
+  <div class="row">
+    <div class="filters d-flex align-items-center gap-2 mb-4 flex-wrap">
+      <div class="select-wrapper position-relative">
+        <i class="bi bi-person filter-icon"></i>
+        <input type="text" class="form-control filter-input ps-5" placeholder="Find by name..."
+               [ngModel]="filters.name"
+               (ngModelChange)="onNameChange($event)">
       </div>
 
-
-      <!-- Lista de personagens -->
-      <div class="col-sm-6 col-md-4 col-lg-3 mb-4"
-           *ngFor="let character of characterStoreService.characters$ | async">
-        <app-character-card [character]="character"></app-character-card>
+      <div class="select-wrapper position-relative">
+        <i class="bi bi-funnel filter-icon"></i>
+        <select class="form-select filter-input ps-5"
+                [(ngModel)]="filters.species"
+                (change)="applyFilters()">
+          <option value="">Species</option>
+          <option *ngFor="let sp of speciesList" [value]="sp">{{ sp }}</option>
+        </select>
       </div>
 
-      <!-- Botão Carregar Mais -->
-      <div class="d-flex justify-content-center my-4">
-        <button class="btn btn-purple w-auto" (click)="loadMore()" [disabled]="isLoading">
-          <ng-container *ngIf="!isLoading; else loadingMore">Load More</ng-container>
-        </button>
+      <div class="select-wrapper position-relative">
+        <i class="bi bi-gender-ambiguous filter-icon"></i>
+        <select class="form-select filter-input ps-5"
+                [(ngModel)]="filters.gender"
+                (change)="applyFilters()">
+          <option value="">Gender</option>
+          <option *ngFor="let sp of genderList" [value]="sp">{{ sp }}</option>
+        </select>
       </div>
 
-      <ng-template #loadingMore>
-        <span>
-          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          Loading...
-        </span>
-      </ng-template>
+      <div class="select-wrapper position-relative">
+        <i class="bi bi-heart-pulse filter-icon"></i>
+        <select class="form-select filter-input ps-5"
+                [(ngModel)]="filters.status"
+                (change)="applyFilters()">
+          <option value="">Status</option>
+          <option *ngFor="let sp of statusList" [value]="sp">{{ sp }}</option>
+        </select>
+      </div>
+
+      <button class="btn btn-purple d-flex align-items-center gap-2" (click)="applyFilters()">
+        <i class="bi bi-search"></i>
+        Search
+      </button>
     </div>
   </div>
 
-  <ng-template #loading>
-    <div class="d-flex justify-content-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+  <!-- LOADER: Mostra enquanto está carregando -->
+  <div *ngIf="loading" class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-  </ng-template>
+  </div>
+
+  <!-- SEM RESULTADOS: Aparece quando terminou de carregar e não tem personagens -->
+  <div *ngIf="!loading && ((characterStoreService.characters$ | async)?.length ?? 0) === 0">
+    <div class="d-flex flex-column align-items-center justify-content-center py-5">
+      <i class="bi bi-emoji-frown display-1 mb-3 text-secondary"></i>
+      <p class="lead mb-0">No characters found for the selected filters.</p>
+    </div>
+  </div>
+
+  <!-- LISTA DE PERSONAGENS: Só aparece se tem personagens -->
+  <div class="row" *ngIf="!loading && ((characterStoreService.characters$ | async)?.length ?? 0) > 0"
+  >
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-4"
+         *ngFor="let character of characterStoreService.characters$ | async">
+      <app-character-card [character]="character"></app-character-card>
+    </div>
+
+    <div class="d-flex justify-content-center my-4">
+      <button class="btn btn-purple w-auto" (click)="loadMore()" [disabled]="isLoading">
+        <ng-container *ngIf="!isLoading; else loadingMore">Load More</ng-container>
+      </button>
+    </div>
+
+    <ng-template #loadingMore>
+      <span>
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Loading...
+      </span>
+    </ng-template>
+  </div>
 </div>
 
+<!-- BOTÃO BACK TO TOP -->
 <button
   class="back-to-top"
   (click)="scrollToTop()"
@@ -87,6 +93,7 @@
   <i class="bi bi-chevron-up"></i>
 </button>
 
+<!-- FAB CREATE CHARACTER -->
 <a [routerLink]="['/new']" class="btn btn-primary fab-create">
   <i class="bi bi-plus-lg fs-4"></i>
 </a>

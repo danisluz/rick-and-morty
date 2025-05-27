@@ -116,7 +116,13 @@ export class CharacterListComponent implements OnInit, OnDestroy {
         }
       },
       error: err => {
-        this.toastService.show('Error when searching for characters!', 'danger');
+        if (err.status === 404) {
+          this.characterStoreService.setCharacters([]);
+          this.info = null;
+          this.toastService.show('No characters found for the selected filters.', 'warning');
+        } else {
+          this.toastService.show('Error fetching characters. Please try again later.', 'danger');
+        }
       }
     });
   }
