@@ -1,7 +1,9 @@
+// Toast container: allows click-through except on the toast itself
 .toast-container {
-  pointer-events: none;
+  pointer-events: none; // Prevents user interaction (clicks, hovers) on the whole container
 }
 
+// Toast: re-enables interaction for the actual toast (e.g., close button)
 .toast {
-  pointer-events: all;
+  pointer-events: all; // Allows user to interact with the toast (click, close, etc.)
 }

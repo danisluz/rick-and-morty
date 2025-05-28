@@ -1,6 +1,6 @@
 @use 'variables' as *;
 
-// Layout geral
+// General layout: root container covers the viewport height, sets background and text color
 :host {
   display: flex;
   flex-direction: column;
@@ -9,6 +9,7 @@
   color: $color-text;
 }
 
+// Main content section: expands to fill available space, background/text color from theme
 .content {
   background-color: $color-bg;
   color: $color-text;
@@ -16,19 +17,20 @@
   padding: 1rem;
 }
 
+// Responsive container for page content, centers and limits max width
 .container {
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
 }
 
+// Main HTML tag: ensures minimum vertical height for content section
 main {
   flex: 1 0 auto;
   min-height: 70vh;
 }
 
-
-// Header customizado
+// Custom header: background and text color from theme variables
 .my-header {
   background-color: $color-surface;
   color: $color-text;
@@ -38,8 +40,7 @@ main {
   }
 }
 
-// Menu
-// Botões
+// Custom button styles for menu and general actions
 .btn-custom {
   background-color: $color-bg;
   color: $color-text;
@@ -49,23 +50,26 @@ main {
   transition: all 0.3s ease;
   cursor: pointer;
 
+  // Hover: dark background and highlight text
   &:hover {
     background-color: #283C45;
     color: $color-primary;
   }
 
+  // Active state: same as hover
   &.active {
     background-color: #283C45;
     color: $color-primary;
   }
 
+  // Focus state: accessible outline
   &:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.5);
   }
 }
 
-// Footer
+// Footer: sticks to bottom, themed background, lighter text
 .footer {
   flex-shrink: 0;
   background: $color-surface;
@@ -75,6 +79,3 @@ main {
   font-size: 0.8rem;
   font-weight: lighter;
 }
-
-
-

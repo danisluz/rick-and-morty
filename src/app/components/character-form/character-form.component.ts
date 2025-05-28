@@ -1,14 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CharacterStoreService} from '../../services/character-store.service';
-import {RickAndMortyService} from '../../services/rick-and-morty.service';
-import {Character} from '../../models/character.model';
-import {Location} from '@angular/common';
-import {CharacterType, Gender, Species, Status} from '../../models/character.enums';
-import {ToastService} from '../../shared/toast.service';
-
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CharacterStoreService } from '../../services/character-store.service';
+import { RickAndMortyService } from '../../services/rick-and-morty.service';
+import { Character } from '../../models/character.model';
+import { Location } from '@angular/common';
+import { CharacterType, Gender, Species, Status } from '../../models/character.enums';
+import { ToastService } from '../../shared/toast.service';
 
 @Component({
   selector: 'app-character-form',
@@ -22,11 +21,11 @@ export class CharacterFormComponent implements OnInit {
   editing = false;
   characterId: string | null = null;
 
+  // Dropdown lists
   statusList = Object.values(Status);
   genderList = Object.values(Gender);
   speciesList = Object.values(Species);
   typesList = Object.values(CharacterType);
-
 
   constructor(
     private fb: FormBuilder,
@@ -37,6 +36,7 @@ export class CharacterFormComponent implements OnInit {
     private location: Location,
     private toastService: ToastService
   ) {
+    // Form initialization with validation
     this.characterForm = this.fb.group({
       name: ['', Validators.required],
       species: ['', Validators.required],
@@ -49,17 +49,22 @@ export class CharacterFormComponent implements OnInit {
     });
   }
 
+  /**
+   * On component initialization: if there's an ID, set editing mode and patch the form.
+   */
   ngOnInit(): void {
     this.characterId = this.route.snapshot.paramMap.get('id');
 
     if (this.characterId) {
       this.editing = true;
 
+      // Try to get the character from local store first
       const localCharacter = this.characterStoreService.getCharacterById(this.characterId);
 
       if (localCharacter) {
         this.patchForm(localCharacter);
       } else {
+        // Fallback to API if not in local store
         this.rickAndMortyService.getCharacterById(this.characterId).subscribe({
           next: (character: Character) => {
             this.patchForm(character);
@@ -73,6 +78,9 @@ export class CharacterFormComponent implements OnInit {
     }
   }
 
+  /**
+   * Fills the form with character data.
+   */
   private patchForm(character: Character): void {
     this.characterForm.patchValue({
       name: character.name,
@@ -86,7 +94,9 @@ export class CharacterFormComponent implements OnInit {
     });
   }
 
-
+  /**
+   * Handles form submission for creating or updating a character.
+   */
   onSubmit(): void {
     if (this.characterForm.invalid) {
       this.characterForm.markAllAsTouched();
@@ -96,6 +106,7 @@ export class CharacterFormComponent implements OnInit {
 
     const formValue = this.characterForm.value;
 
+    // Construct character object based on form input
     const character: Character = {
       id: this.characterId ?? Math.random().toString(36).substring(2, 9),
       name: formValue.name,
@@ -118,14 +129,20 @@ export class CharacterFormComponent implements OnInit {
       this.toastService.show('Character created successfully!', 'success');
     }
 
+    // Redirect to main page after submission
     this.router.navigate(['/']);
   }
 
-
+  /**
+   * Cancel and return to main page.
+   */
   onCancel(): void {
     this.router.navigate(['/']);
   }
 
+  /**
+   * Go back to previous location in history.
+   */
   onBack(): void {
     this.location.back();
   }

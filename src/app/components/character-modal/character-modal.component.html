@@ -1,32 +1,44 @@
+<!-- Custom Modal Backdrop: Opens only if a character is set -->
 <div class="custom-modal-backdrop" *ngIf="character as char" (click)="close()">
+
+  <!-- Modal Content: Clicks inside do NOT close the modal -->
   <div class="custom-modal-content" (click)="$event.stopPropagation()">
+    <!-- Close Button (top-right) -->
     <button class="custom-close" (click)="close()">×</button>
 
-    <img [src]="char.image" alt="{{ char.name }}" class="character-img">
+    <!-- Character Image -->
+    <img [src]="char.image" [alt]="char.name" class="character-img">
 
+    <!-- Character Name -->
     <h2 class="character-name mt-3">{{ char.name }}</h2>
 
+    <!-- Character Details Grid -->
     <div class="row text-start">
+      <!-- Gender Field -->
       <div class="col-12 col-md-6">
         <hr>
         <strong>Gender</strong>
         <p>{{ char.gender || 'unknown gender' }}</p>
       </div>
+      <!-- Type Field -->
       <div class="col-12 col-md-6">
         <hr>
         <strong>Type</strong>
         <p>{{ char.type || 'Unknown' }}</p>
       </div>
+      <!-- Status Field -->
       <div class="col-12 col-md-6">
         <hr>
         <strong>Status</strong>
         <p>{{ char.status || 'Status unknown' }}</p>
       </div>
+      <!-- Location Field -->
       <div class="col-12 col-md-6">
         <hr>
         <strong>Location</strong>
         <p>{{ char.location?.name || 'Location unknown' }}</p>
       </div>
+      <!-- Origin Field -->
       <div class="col-12 col-md-6">
         <hr>
         <strong>Origin</strong>
@@ -34,23 +46,25 @@
       </div>
     </div>
 
+    <!-- Modal Action Buttons -->
     <div class="modal-actions mt-3 d-flex justify-content-end gap-2 flex-column flex-md-row">
+      <!-- Delete Button: Opens the confirmation modal -->
       <button type="button" class="btn btn-custom d-inline-flex align-items-center gap-2"
               (click)="openConfirmModal()">
         <i class="bi bi-trash"></i>
-        Excluir
+        Delete
       </button>
-
+      <!-- Edit Button: Opens the character edit form -->
       <button class="btn btn-custom d-inline-flex align-items-center gap-2" (click)="edit()">
         <i class="bi bi-pencil"></i>
-        Editar
+        Edit
       </button>
     </div>
-
 
   </div>
 </div>
 
+<!-- Confirmation Modal: Shown when attempting to delete -->
 <app-confirm-modal
   *ngIf="showConfirmModal"
   [title]="'Delete Character'"
@@ -60,5 +74,3 @@
   (confirm)="deleteCharacter()"
   (cancel)="closeConfirmModal()">
 </app-confirm-modal>
-
-

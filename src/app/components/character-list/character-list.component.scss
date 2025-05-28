@@ -1,7 +1,7 @@
 @use 'variables' as *;
 @use 'sass:color';
 
-// Filtros
+// Filter input styles (text inputs and selects)
 .filter-input {
   background-color: $color-surface;
   color: $color-text;
@@ -12,22 +12,26 @@
   flex: 1;
   min-width: 120px;
 
+  // Placeholder color: faded
   &::placeholder {
     color: $color-text;
     opacity: 0.3;
   }
 
+  // Focused input: colored outline
   &:focus {
     box-shadow: 0 0 0 2px color.adjust($color-secondary, $lightness: -50%);
     outline: none;
   }
 }
 
+// Wrapper for inputs/selects with icon alignment
 .select-wrapper {
   flex: 1;
   min-width: 120px;
 }
 
+// Leading icon inside filter fields (positioned absolutely)
 .filter-icon {
   position: absolute;
   top: 50%;
@@ -38,7 +42,7 @@
   font-size: 1rem;
 }
 
-// Botão roxo
+// Purple action button for search/filter
 .btn-purple {
   background-color: $color-secondary;
   color: #fff;
@@ -48,12 +52,13 @@
   transition: background-color 0.3s ease;
   padding: 8px 30px;
 
+  // Darken on hover
   &:hover {
     background-color: color.adjust($color-secondary, $lightness: -10%);
   }
 }
 
-// Button back to top
+// Floating button: back to top (fixed on the screen, left-bottom)
 .back-to-top {
   position: fixed;
   bottom: 20px;
@@ -82,7 +87,7 @@
   }
 }
 
-// Button new
+// Floating Action Button (FAB) for "New" action (fixed, right-bottom)
 .fab-create {
   position: fixed;
   bottom: 20px;
@@ -104,6 +109,3 @@
     opacity: 0.9;
   }
 }
-
-
-

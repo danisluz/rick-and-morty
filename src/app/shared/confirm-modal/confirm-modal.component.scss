@@ -1,6 +1,7 @@
 @use 'variables' as *;
 @use 'sass:color';
 
+// Modal base container: covers the entire viewport
 .modal {
   position: fixed;
   top: 0; left: 0;
@@ -10,11 +11,13 @@
   display: block;
 }
 
+// Modal content area: color customization for backgrounds and text
 .modal-content {
   background-color: $color-bg;
   color: $color-text;
 }
 
+// Shared custom button style (used for general modal actions)
 .btn-custom {
   background-color: $color-surface;
   color: $color-text;
@@ -25,31 +28,34 @@
   cursor: pointer;
   border: none;
 
+  // Hover state: darken background and change text color to primary
   &:hover {
     background-color: #283C45;
     color: $color-primary;
   }
 
+  // Active state for navigation or toggled buttons
   &.active {
     background-color: #283C45;
     color: $color-primary;
   }
 
+  // Focus state: accessible box-shadow outline
   &:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.5);
   }
 }
 
+// Special button for "Delete" actions (e.g., in confirmation modals)
 .btn-custom-delete {
   @extend .btn-custom;
   background-color: $color-secondary;
   color: $color-text;
 
+  // Hover: lightens the secondary color
   &:hover {
     background-color: color.adjust($color-secondary, $lightness: 10%);
     color: $color-text;
   }
 }
-
-

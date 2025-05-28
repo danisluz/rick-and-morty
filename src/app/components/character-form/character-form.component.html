@@ -1,14 +1,17 @@
 <div class="container mt-4">
 
+  <!-- Back Button -->
   <button type="button" class="btn-back" (click)="onBack()">
     <i class="bi bi-arrow-left"></i> <span>Back</span>
   </button>
 
-
+  <!-- Page Title -->
   <h2 class="mb-4 mt-3">{{ editing ? 'Edit' : 'Create' }} character</h2>
 
+  <!-- Character Form -->
   <form [formGroup]="characterForm" (ngSubmit)="onSubmit()">
 
+    <!-- Name Input Field -->
     <div class="mb-3">
       <label class="form-label">Name</label>
       <input formControlName="name" class="form-control bg-dark text-light border-0 rounded-3"
@@ -19,7 +22,9 @@
       </div>
     </div>
 
+    <!-- Species & Gender Row -->
     <div class="row">
+      <!-- Species Dropdown -->
       <div class="col-md-6 mb-3">
         <label class="form-label">Species</label>
         <select formControlName="species" class="form-select bg-dark text-light border-0 rounded-3"
@@ -31,6 +36,7 @@
         </div>
       </div>
 
+      <!-- Gender Dropdown -->
       <div class="col-md-6 mb-3">
         <label class="form-label">Gender</label>
         <select formControlName="gender" class="form-select bg-dark text-light border-0 rounded-3"
@@ -43,7 +49,9 @@
       </div>
     </div>
 
+    <!-- Status & Type Row -->
     <div class="row">
+      <!-- Status Dropdown -->
       <div class="col-md-6 mb-3">
         <label class="form-label">Status</label>
         <select formControlName="status" class="form-select bg-dark text-light border-0 rounded-3"
@@ -55,6 +63,7 @@
         </div>
       </div>
 
+      <!-- Type Dropdown -->
       <div class="col-md-6 mb-3">
         <label class="form-label">Type</label>
         <select formControlName="type" class="form-select bg-dark text-light border-0 rounded-3"
@@ -67,23 +76,27 @@
       </div>
     </div>
 
+    <!-- Origin Input Field -->
     <div class="mb-3">
       <label class="form-label">Origin</label>
-      <input formControlName="origin" class="form-control bg-dark text-light border-0 rounded-3" placeholder="Status"/>
+      <input formControlName="origin" class="form-control bg-dark text-light border-0 rounded-3" placeholder="Origin"/>
     </div>
 
+    <!-- Location Input Field -->
     <div class="mb-3">
       <label class="form-label">Location</label>
       <input formControlName="location" class="form-control bg-dark text-light border-0 rounded-3"
-             placeholder="Status"/>
+             placeholder="Location"/>
     </div>
 
+    <!-- Image URL Input Field -->
     <div class="mb-3">
       <label class="form-label">Image URL</label>
       <input formControlName="image" class="form-control bg-dark text-light border-0 rounded-3"
-             placeholder="Url da imagem"/>
+             placeholder="Image URL"/>
     </div>
 
+    <!-- Action Buttons (Cancel / Submit) -->
     <div class="d-flex gap-2 justify-content-end mt-4">
       <button type="button" class="btn btn-custom" (click)="onCancel()">Cancel</button>
       <button type="submit" class="btn btn-custom-action">

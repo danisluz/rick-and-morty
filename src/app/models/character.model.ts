@@ -1,3 +1,6 @@
+/**
+ * Represents a single character entity.
+ */
 export interface Character {
   id: string;
   name: string;
@@ -9,14 +12,20 @@ export interface Character {
   origin?: { name: string };
   location?: { name: string };
   episode?: string[];
-  edited?: boolean;
+  edited?: boolean; // Used to identify if the character was edited locally
 }
 
+/**
+ * Reference to a location object, with name and URL.
+ */
 export interface LocationReference {
   name: string;
   url: string;
 }
 
+/**
+ * Pagination information used in API responses.
+ */
 export interface PaginationInfo {
   count: number;
   pages: number;
@@ -24,6 +33,9 @@ export interface PaginationInfo {
   prev: number | null;
 }
 
+/**
+ * Response structure for character API calls, including pagination.
+ */
 export interface CharactersResponse {
   info: {
     count: number;
@@ -34,6 +46,9 @@ export interface CharactersResponse {
   results: Character[];
 }
 
+/**
+ * Filters used when searching for characters.
+ */
 export interface CharacterFilters {
   page?: number;
   name?: string;
@@ -41,5 +56,3 @@ export interface CharacterFilters {
   gender?: string;
   status?: string;
 }
-
-

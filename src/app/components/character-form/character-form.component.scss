@@ -1,6 +1,7 @@
 @use 'variables' as *;
 @use 'sass:color';
 
+// General custom button style (used as base for other buttons)
 .btn-custom {
   background-color: $color-surface;
   color: $color-text;
@@ -11,33 +12,39 @@
   cursor: pointer;
   border: none;
 
+  // Hover effect: darken background and change text color to primary
   &:hover {
     background-color: #283C45;
     color: $color-primary;
   }
 
+  // Active state for navigation links
   &.active {
     background-color: #283C45;
     color: $color-primary;
   }
 
+  // Focus style: accessible outline using a box-shadow
   &:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.5);
   }
 }
 
+// Action button (primary form action, e.g., "Save", "Create")
 .btn-custom-action {
   @extend .btn-custom;
   background-color: $color-secondary;
   color: $color-text;
 
+  // Slightly darkens the secondary color on hover
   &:hover {
     background-color: color.adjust($color-secondary, $lightness: -10%);
     color: $color-text;
   }
 }
 
+// Back button (inline icon/text, e.g., "← Back")
 .btn-back {
   display: inline-flex;
   align-items: center;
@@ -51,6 +58,7 @@
   padding: 0;
   text-decoration: none;
 
+  // Adds a slight horizontal movement on hover
   transition: transform 0.2s ease, color 0.3s ease;
 
   &:hover {
@@ -62,4 +70,3 @@
     display: inline-block;
   }
 }
-

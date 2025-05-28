@@ -1,10 +1,16 @@
+<!-- Toast Notification: Only shown if there is a message -->
 <div *ngIf="message" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
   <div class="toast align-items-center text-white bg-{{type}} border-0 show" role="alert">
     <div class="d-flex">
+      <!-- Toast message content -->
       <div class="toast-body">
         {{ message }}
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close" (click)="close()"></button>
+      <!-- Close button -->
+      <button type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              aria-label="Close"
+              (click)="close()"></button>
     </div>
   </div>
 </div>

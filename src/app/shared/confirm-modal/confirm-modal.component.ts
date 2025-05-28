@@ -9,18 +9,46 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./confirm-modal.component.scss']
 })
 export class ConfirmModalComponent {
-  @Input() title: string = 'Confirmar';
-  @Input() message: string = 'Tem certeza que deseja continuar?';
-  @Input() confirmText: string = 'Confirmar';
-  @Input() cancelText: string = 'Cancelar';
+  /**
+   * Title displayed at the top of the modal.
+   */
+  @Input() title: string = 'Confirm';
 
+  /**
+   * Message body shown to the user.
+   */
+  @Input() message: string = 'Are you sure you want to continue?';
+
+  /**
+   * Label for the confirm action button.
+   */
+  @Input() confirmText: string = 'Confirm';
+
+  /**
+   * Label for the cancel action button.
+   */
+  @Input() cancelText: string = 'Cancel';
+
+  /**
+   * Emits when the user confirms the action.
+   */
   @Output() confirm = new EventEmitter<void>();
+
+  /**
+   * Emits when the user cancels the modal.
+   */
   @Output() cancel = new EventEmitter<void>();
 
+  /**
+   * Triggers the confirm output.
+   */
   confirmAction() {
     this.confirm.emit();
   }
 
+  /**
+   * Triggers the cancel output.
+   */
   cancelAction() {
     this.cancel.emit();
   }
